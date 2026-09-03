@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AE Tenancy Portal</title>
 
-    <!-- PWA / Web App -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#f5b748">
-
     <!-- Web App & Home Screen Icons -->
     <link rel="apple-touch-icon" href="logo.png">
     <link rel="icon" type="image/png" href="logo.png">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f5b748">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -25,14 +25,108 @@
 
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        /* Custom Install Banner */
+        #install-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: #f5b748;
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        }
+
+        #install-banner-inner {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #install-banner-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        #install-banner-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        #install-banner-title {
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        #install-banner-message {
+            font-size: 9px;
+            line-height: 1.4;
+            opacity: 0.75;
+            margin-top: 2px;
+        }
+
+        #install-action {
+            font-size: 10px;
+            font-weight: 700;
+            text-decoration: underline;
+            cursor: pointer;
+            white-space: nowrap;
+            padding: 4px;
+        }
+
+        #install-close {
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 3px 5px;
+            opacity: 0.65;
+            background: none;
+            border: none;
+        }
+
+        #install-close:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 
 <body class="bg-slate-50 dark:bg-[#121316] text-slate-800 dark:text-slate-100 min-h-screen pb-12 transition-colors duration-200">
 
+    <!-- Custom Install Banner -->
+    <div id="install-banner">
+        <div id="install-banner-inner">
+            <div id="install-banner-icon">📱</div>
+
+            <div id="install-banner-text">
+                <div id="install-banner-title">
+                    Install AE Tenancy Portal
+                </div>
+
+                <div id="install-banner-message">
+                    Add it to your home screen for quick access.
+                </div>
+            </div>
+
+            <span id="install-action" onclick="installPortal()">
+                Install
+            </span>
+
+            <button id="install-close" onclick="closeInstallBanner()" aria-label="Close">
+                ×
+            </button>
+        </div>
+    </div>
+
     <!-- Header / Brand Banner -->
     <header class="bg-white dark:bg-[#1a1c23] border-b border-slate-200 dark:border-amber-500/20 sticky top-0 z-50 backdrop-blur-md transition-colors duration-200">
         <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between">
+
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-full bg-[#f5b748] flex items-center justify-center overflow-hidden border border-amber-500/20 shadow-md shrink-0">
                     <img src="logo.png" alt="AE Logo" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -40,8 +134,13 @@
                 </div>
 
                 <div>
-                    <h1 class="text-base font-bold text-slate-900 dark:text-slate-100 tracking-wide leading-tight">AE TENANCY PORTAL</h1>
-                    <p class="text-[10px] text-amber-600 dark:text-amber-400/80 font-semibold">Agreement Management System</p>
+                    <h1 class="text-base font-bold text-slate-900 dark:text-slate-100 tracking-wide leading-tight">
+                        AE TENANCY PORTAL
+                    </h1>
+
+                    <p class="text-[10px] text-amber-600 dark:text-amber-400/80 font-semibold">
+                        Agreement Management System
+                    </p>
                 </div>
             </div>
 
@@ -50,6 +149,7 @@
                     <span id="theme-icon" class="text-xs font-bold uppercase tracking-wider">🌙 Dark</span>
                 </button>
             </div>
+
         </div>
     </header>
 
@@ -92,42 +192,42 @@
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Duration Text ([DURATION])
                         </label>
-                        <input type="text" id="DURATION" value="TWO" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="DURATION" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Duration Num ([DURATION_YEAR])
                         </label>
-                        <input type="text" id="DURATION_YEAR" value="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="DURATION_YEAR" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Start Date ([START_DATE])
                         </label>
-                        <input type="text" id="START_DATE" value="1st January 2025" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="START_DATE" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             End Date ([END_DATE])
                         </label>
-                        <input type="text" id="END_DATE" value="31st December 2026" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="END_DATE" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Option to Renew ([RENEW])
                         </label>
-                        <input type="text" id="RENEW" value="ONE" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="RENEW" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Renew Num ([RENEW_YEAR])
                         </label>
-                        <input type="text" id="RENEW_YEAR" value="1" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="RENEW_YEAR" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                 </div>
@@ -136,7 +236,7 @@
                     <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                         Bank Payment Details ([BANK_DETAIL])
                     </label>
-                    <input type="text" id="BANK_DETAIL" value="MAYBANK 1234567890 (AYUB EWAN)" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    <input type="text" id="BANK_DETAIL" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                 </div>
 
             </div>
@@ -157,14 +257,14 @@
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Name ([LANDLORD_NAME])
                         </label>
-                        <input type="text" id="LANDLORD_NAME" value="AYUB EWAN BIN MOHD FADZLY" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="LANDLORD_NAME" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             NRIC ([LANDLORD_IC])
                         </label>
-                        <input type="text" id="LANDLORD_IC" value="870707-15-5049" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="LANDLORD_IC" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                 </div>
@@ -173,14 +273,14 @@
                     <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                         Phone ([LANDLORD_PHONE])
                     </label>
-                    <input type="text" id="LANDLORD_PHONE" value="016-84444877" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    <input type="text" id="LANDLORD_PHONE" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                         Address ([LANDLORD_ADDRESS])
                     </label>
-                    <textarea id="LANDLORD_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">NO.106, THE LAKE RESIDENCE, JALAN PUTRA PERDANA 16, TAMAN PUTRA PERDANA, 47100 PUCHONG, SELANGOR</textarea>
+                    <textarea id="LANDLORD_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"></textarea>
                 </div>
 
             </div>
@@ -201,14 +301,14 @@
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Name ([TENANT_NAME])
                         </label>
-                        <input type="text" id="TENANT_NAME" value="ZHARIF FAHMI BIN SHAHIDAN" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="TENANT_NAME" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             NRIC ([TENANT_IC])
                         </label>
-                        <input type="text" id="TENANT_IC" value="980717-06-5319" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="TENANT_IC" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                 </div>
@@ -217,14 +317,14 @@
                     <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                         Phone ([TENANT_PHONE])
                     </label>
-                    <input type="text" id="TENANT_PHONE" value="0111-1987782" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    <input type="text" id="TENANT_PHONE" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                         Address ([TENANT_ADDRESS])
                     </label>
-                    <textarea id="TENANT_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">A-4-2, PPAM KETUMBAR, PRESINT 17, 62150 W.P. PUTRAJAYA</textarea>
+                    <textarea id="TENANT_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"></textarea>
                 </div>
 
             </div>
@@ -243,7 +343,7 @@
                     <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                         Property Address ([PROPERTY_ADDRESS])
                     </label>
-                    <textarea id="PROPERTY_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">13-4-2, KEKWA APARTMENT, JALAN PUTRA PERDANA 5B, TAMAN PUTRA PERDANA, 47100 PUCHONG, SELANGOR</textarea>
+                    <textarea id="PROPERTY_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"></textarea>
                 </div>
 
                 <!-- Structured Financial Grid -->
@@ -253,42 +353,42 @@
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Rental Words ([RENTAL_AMOUNT])
                         </label>
-                        <input type="text" id="RENTAL_AMOUNT" value="EIGHT HUNDRED" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="RENTAL_AMOUNT" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Sec Deposit Words ([DEPOSIT_AMOUNT])
                         </label>
-                        <input type="text" id="DEPOSIT_AMOUNT" value="ONE THOUSAND SIX HUNDRED" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="DEPOSIT_AMOUNT" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Rental Num ([RENTAL_NUMBER])
                         </label>
-                        <input type="text" id="RENTAL_NUMBER" value="800.00" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="RENTAL_NUMBER" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Sec Deposit Num ([DEPOSIT_NUMBER])
                         </label>
-                        <input type="text" id="DEPOSIT_NUMBER" value="1,600.00" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="DEPOSIT_NUMBER" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Util Deposit Words ([UTILITY_DEPOSIT])
                         </label>
-                        <input type="text" id="UTILITY_DEPOSIT" value="FOUR HUNDRED" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="UTILITY_DEPOSIT" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                     <div class="flex flex-col justify-end">
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                             Util Deposit Num ([UTILITY_NUMBER])
                         </label>
-                        <input type="text" id="UTILITY_NUMBER" value="400.00" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <input type="text" id="UTILITY_NUMBER" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
                 </div>
@@ -306,7 +406,7 @@
     <script>
 
         /* =========================================================
-           EXISTING THEME LOGIC — UNCHANGED
+           THEME
         ========================================================= */
 
         function toggleTheme() {
@@ -324,7 +424,11 @@
             }
         }
 
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (
+            localStorage.getItem('theme') === 'dark' ||
+            (!('theme' in localStorage) &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ) {
             document.documentElement.classList.add('dark');
             document.getElementById('theme-icon').innerText = '🌙 Dark';
         } else {
@@ -334,11 +438,11 @@
 
 
         /* =========================================================
-           EXISTING DOCUMENT GENERATION LOGIC — UNCHANGED
+           DOCX GENERATOR
+           ORIGINAL PLACEHOLDER LOGIC — UNCHANGED
         ========================================================= */
 
         async function generateDoc() {
-
             const fileInput = document.getElementById('docx-input');
 
             if (!fileInput.files[0]) {
@@ -372,7 +476,6 @@
             };
 
             try {
-
                 const zip = await JSZip.loadAsync(fileInput.files[0]);
 
                 const xmlFiles = Object.keys(zip.files).filter(
@@ -382,11 +485,9 @@
                 );
 
                 for (const fileName of xmlFiles) {
-
                     const xmlFile = zip.file(fileName);
 
                     if (xmlFile) {
-
                         let content = await xmlFile.async("string");
 
                         content = content.replace(
@@ -402,7 +503,6 @@
                         );
 
                         for (const key of Object.keys(replacements)) {
-
                             const brokenRegex = new RegExp(
                                 '\\[\\s*' +
                                 key.split('').join('(?:<[^>]+>)*') +
@@ -438,7 +538,8 @@
 
                 const blob = await zip.generateAsync({
                     type: "blob",
-                    mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    mimeType:
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 });
 
                 const tenantName =
@@ -460,12 +561,7 @@
                 URL.revokeObjectURL(link.href);
 
             } catch (err) {
-
-                alert(
-                    "Error processing document: " +
-                    err.message
-                );
-
+                alert("Error processing document: " + err.message);
             }
         }
 
@@ -475,7 +571,6 @@
         ========================================================= */
 
         if ('serviceWorker' in navigator) {
-
             window.addEventListener('load', () => {
 
                 navigator.serviceWorker
@@ -498,85 +593,142 @@
                     });
 
             });
-
         }
 
 
         /* =========================================================
-           NATIVE CHROME PWA INSTALL PROMPT
-           
-           IMPORTANT:
-           This does NOT create a custom install button/banner.
-           It uses Chrome's own native installation dialog.
+           CUSTOM INSTALL BANNER
         ========================================================= */
 
         let deferredInstallPrompt = null;
 
+        const installBanner =
+            document.getElementById('install-banner');
+
+        const installAction =
+            document.getElementById('install-action');
+
+        const installMessage =
+            document.getElementById('install-banner-message');
+
+
+        function showInstallBanner() {
+
+            if (
+                window.matchMedia('(display-mode: standalone)').matches ||
+                window.navigator.standalone === true
+            ) {
+                return;
+            }
+
+            installBanner.style.display = 'block';
+        }
+
+
+        function closeInstallBanner() {
+            installBanner.style.display = 'none';
+        }
+
+
+        async function installPortal() {
+
+            if (!deferredInstallPrompt) {
+
+                installMessage.innerText =
+                    'Open Chrome ⋮ menu and choose "Install app" or "Add to Home screen".';
+
+                installAction.style.display = 'none';
+
+                return;
+            }
+
+            try {
+
+                deferredInstallPrompt.prompt();
+
+                const choice =
+                    await deferredInstallPrompt.userChoice;
+
+                console.log(
+                    'AE Tenancy Portal installation result:',
+                    choice.outcome
+                );
+
+                deferredInstallPrompt = null;
+
+                if (choice.outcome === 'accepted') {
+                    closeInstallBanner();
+                }
+
+            } catch (error) {
+
+                console.log(
+                    'AE Tenancy Portal install prompt error:',
+                    error
+                );
+
+            }
+        }
+
+
+        /*
+         * Chrome fires this only when its install
+         * criteria are satisfied.
+         */
         window.addEventListener(
             'beforeinstallprompt',
             event => {
 
-                console.log(
-                    'AE Tenancy Portal: beforeinstallprompt fired.'
-                );
-
-                /*
-                 * Stop Chrome from deciding to show its own
-                 * mini-infobar automatically.
-                 *
-                 * We retain the event so we can call prompt().
-                 */
                 event.preventDefault();
 
                 deferredInstallPrompt = event;
 
-                /*
-                 * Give Chrome a moment after the event fires,
-                 * then request the native installation dialog.
-                 */
-                setTimeout(async () => {
+                installAction.style.display = 'inline';
 
-                    if (!deferredInstallPrompt) {
-                        return;
-                    }
+                installMessage.innerText =
+                    'Add it to your home screen for quick access.';
 
-                    try {
-
-                        console.log(
-                            'AE Tenancy Portal: requesting native install prompt...'
-                        );
-
-                        await deferredInstallPrompt.prompt();
-
-                        const choice =
-                            await deferredInstallPrompt.userChoice;
-
-                        console.log(
-                            'AE Tenancy Portal installation result:',
-                            choice.outcome
-                        );
-
-                    } catch (error) {
-
-                        console.log(
-                            'AE Tenancy Portal: native install prompt could not be shown.',
-                            error
-                        );
-
-                    }
-
-                    deferredInstallPrompt = null;
-
-                }, 800);
+                showInstallBanner();
 
             }
         );
 
 
-        /* =========================================================
-           APP INSTALLED
-        ========================================================= */
+        /*
+         * If Chrome does not fire beforeinstallprompt,
+         * still show our own banner after a short delay.
+         */
+        window.addEventListener(
+            'load',
+            () => {
 
+                setTimeout(() => {
+
+                    if (!deferredInstallPrompt) {
+
+                        if (
+                            !window.matchMedia('(display-mode: standalone)').matches &&
+                            window.navigator.standalone !== true
+                        ) {
+
+                            installMessage.innerText =
+                                'Open Chrome ⋮ menu and choose "Install app" or "Add to Home screen".';
+
+                            installAction.style.display = 'none';
+
+                            showInstallBanner();
+                        }
+                    }
+
+                }, 2500);
+
+            }
+        );
+
+
+        /*
+         * Hide banner after successful installation.
+         */
         window.addEventListener(
             'appinstalled',
             () => {
@@ -586,6 +738,8 @@
                 );
 
                 deferredInstallPrompt = null;
+
+                closeInstallBanner();
 
             }
         );
