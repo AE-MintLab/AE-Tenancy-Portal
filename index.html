@@ -443,12 +443,32 @@
         ========================================================= */
 
         async function generateDoc() {
-            const fileInput = document.getElementById('docx-input');
+    const fileInput = document.getElementById('docx-input');
 
-            if (!fileInput.files[0]) {
-                alert('Please upload your .docx master document first.');
-                return;
+    let masterFile;
+
+    /*
+     * Use manually uploaded document if selected.
+     * Otherwise, automatically use the master document
+     * stored in the GitHub repository.
+     */
+    if (fileInput.files[0]) {
+        masterFile = fileInput.files[0];
+    } else {
+        try {
+            const response = await fetch('./master-tenancy.docx');
+            if (!response.ok) {
+                throw new Error('Saved master document could not be loaded.');
             }
+            masterFile = await response.blob();
+        } catch (error) {
+            alert(
+                'Unable to load the saved master document. ' +
+                'Please check that master-tenancy.docx exists in the repository.'
+            );
+            return;
+        }
+    }
 
             const replacements = {
                 "DURATION": document.getElementById('DURATION').value,
@@ -476,7 +496,7 @@
             };
 
             try {
-                const zip = await JSZip.loadAsync(fileInput.files[0]);
+                const zip = await JSZip.loadAsync(masterFile);
 
                 const xmlFiles = Object.keys(zip.files).filter(
                     fileName =>
