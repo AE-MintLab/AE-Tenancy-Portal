@@ -3,1551 +3,589 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>AE Tenancy Portal</title>
 
-    <!-- PWA -->
-    <link rel="manifest" href="./manifest.json">
+    <!-- PWA / Web App -->
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f5b748">
 
-    <!-- Icons -->
-    <link rel="apple-touch-icon" href="./logo.png">
-    <link rel="icon" type="image/png" href="./logo.png">
+    <!-- Web App & Home Screen Icons -->
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
 
-    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif']
-                    }
-                }
-            }
-        };
+        }
     </script>
 
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        input,
-        textarea {
-            transition: border-color .2s, box-shadow .2s;
-        }
-
-        input:focus,
-        textarea:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(245, 183, 72, .18);
-            border-color: #f5b748;
-        }
-
-        .field-label {
-            display: block;
-            font-size: .75rem;
-            line-height: 1rem;
-            font-weight: 700;
-            margin-bottom: .4rem;
-            color: #475569;
-        }
-
-        .dark .field-label {
-            color: #cbd5e1;
-        }
-
-        .field {
-            width: 100%;
-            border: 1px solid #e2e8f0;
-            background: #fff;
-            color: #0f172a;
-            border-radius: .75rem;
-            padding: .72rem .85rem;
-            font-size: .875rem;
-        }
-
-        .dark .field {
-            border-color: rgba(255,255,255,.1);
-            background: rgba(255,255,255,.04);
-            color: #f8fafc;
-        }
-
-        .field::placeholder {
-            color: #94a3b8;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
 
-<body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#121316] dark:text-slate-100 transition-colors">
+<body class="bg-slate-50 dark:bg-[#121316] text-slate-800 dark:text-slate-100 min-h-screen pb-12 transition-colors duration-200">
 
-    <!-- HEADER -->
-    <header class="sticky top-0 z-40 border-b border-slate-200/80 dark:border-white/10 bg-white/90 dark:bg-[#121316]/90 backdrop-blur">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-
-            <div class="flex items-center gap-3">
-                <img
-                    src="./logo.png"
-                    alt="AE Tenancy Portal"
-                    class="w-10 h-10 rounded-xl object-cover"
-                >
+    <!-- Header / Brand Banner -->
+    <header class="bg-white dark:bg-[#1a1c23] border-b border-slate-200 dark:border-amber-500/20 sticky top-0 z-50 backdrop-blur-md transition-colors duration-200">
+        <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-[#f5b748] flex items-center justify-center overflow-hidden border border-amber-500/20 shadow-md shrink-0">
+                    <img src="logo.png" alt="AE Logo" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="hidden text-black font-bold text-sm">AE</span>
+                </div>
 
                 <div>
-                    <h1 class="font-extrabold text-lg tracking-tight">
-                        AE Tenancy Portal
-                    </h1>
-
-                    <p class="text-xs text-slate-500 dark:text-slate-400">
-                        Tenancy Agreement Generator
-                    </p>
+                    <h1 class="text-base font-bold text-slate-900 dark:text-slate-100 tracking-wide leading-tight">AE TENANCY PORTAL</h1>
+                    <p class="text-[10px] text-amber-600 dark:text-amber-400/80 font-semibold">Agreement Management System</p>
                 </div>
             </div>
 
-            <button
-                id="themeToggle"
-                type="button"
-                class="w-10 h-10 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 flex items-center justify-center"
-                aria-label="Toggle theme"
-            >
-                <span id="themeIcon">☀️</span>
-            </button>
-
+            <div class="flex items-center space-x-2">
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-amber-400 hover:opacity-80 transition">
+                    <span id="theme-icon" class="text-xs font-bold uppercase tracking-wider">🌙 Dark</span>
+                </button>
+            </div>
         </div>
     </header>
 
+    <main class="max-w-xl mx-auto p-4 space-y-5">
 
-    <!-- MAIN -->
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+        <!-- File Upload Section -->
+        <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-amber-500/20 rounded-2xl p-5 shadow-sm dark:shadow-xl transition-colors duration-200">
 
-        <div class="mb-7">
-            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                Create Tenancy Agreement
-            </h2>
+            <label class="block text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2">
+                Master Document (.docx)
+            </label>
 
-            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                Fill in the details below, upload your master document, then generate the completed agreement.
-            </p>
+            <div class="relative border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-amber-500/50 transition rounded-xl p-4 text-center bg-slate-50 dark:bg-[#121316]/50">
+
+                <input
+                    type="file"
+                    id="docx-input"
+                    accept=".docx"
+                    class="block w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#f5b748] file:text-black hover:file:bg-amber-400 file:transition cursor-pointer"
+                />
+
+            </div>
         </div>
 
+        <form onsubmit="return false;" class="space-y-5">
 
-        <div class="space-y-6">
+            <!-- Tenancy Details -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
 
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                        Tenancy Period & Banking
+                    </h2>
+                </div>
 
-            <!-- MASTER DOCUMENT -->
-            <section class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 p-5 sm:p-6 shadow-sm">
+                <div class="grid grid-cols-2 gap-3">
 
-                <div class="flex items-start gap-4">
-
-                    <div class="w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-400/10 flex items-center justify-center text-xl">
-                        📄
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Duration Text ([DURATION])
+                        </label>
+                        <input type="text" id="DURATION" value="TWO" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
-                    <div class="flex-1">
-
-                        <h3 class="font-bold">
-                            Master Document
-                        </h3>
-
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                            Upload your master .docx containing placeholders such as [TENANT_NAME].
-                        </p>
-
-                        <input
-                            id="masterDoc"
-                            type="file"
-                            accept=".docx"
-                            class="mt-4 block w-full text-sm text-slate-600 dark:text-slate-300
-                            file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900
-                            file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white
-                            dark:file:bg-amber-400 dark:file:text-slate-900"
-                        >
-
-                        <p
-                            id="fileStatus"
-                            class="mt-2 text-xs text-slate-500 dark:text-slate-400"
-                        >
-                            No document selected.
-                        </p>
-
-                    </div>
-                </div>
-            </section>
-
-
-            <!-- TENANCY DETAILS -->
-            <section class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 p-5 sm:p-6 shadow-sm">
-
-                <div class="mb-5">
-                    <h3 class="font-bold text-lg">
-                        Tenancy Details
-                    </h3>
-
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                        Basic agreement terms.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                    <label class="block">
-                        <span class="field-label">Duration</span>
-                        <input
-                            type="text"
-                            id="DURATION"
-                            placeholder="e.g. 1"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block">
-                        <span class="field-label">Duration (Year)</span>
-                        <input
-                            type="text"
-                            id="DURATION_YEAR"
-                            placeholder="e.g. year"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block">
-                        <span class="field-label">Start Date</span>
-                        <input
-                            type="text"
-                            id="START_DATE"
-                            placeholder="e.g. 01/01/2026"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block">
-                        <span class="field-label">End Date</span>
-                        <input
-                            type="text"
-                            id="END_DATE"
-                            placeholder="e.g. 31/12/2026"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block">
-                        <span class="field-label">Renewal</span>
-                        <input
-                            type="text"
-                            id="RENEW"
-                            placeholder="e.g. renewable"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block">
-                        <span class="field-label">Renewal (Year)</span>
-                        <input
-                            type="text"
-                            id="RENEW_YEAR"
-                            placeholder="e.g. 1 year"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block sm:col-span-2">
-                        <span class="field-label">Bank Detail</span>
-                        <input
-                            type="text"
-                            id="BANK_DETAIL"
-                            placeholder="Bank / account details"
-                            class="field"
-                        >
-                    </label>
-
-                </div>
-            </section>
-
-
-            <!-- LANDLORD -->
-            <section class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 p-5 sm:p-6 shadow-sm">
-
-                <div class="mb-5">
-                    <h3 class="font-bold text-lg">
-                        Landlord Details
-                    </h3>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                    <label class="block">
-                        <span class="field-label">Full Name</span>
-                        <input
-                            type="text"
-                            id="LANDLORD_NAME"
-                            placeholder="Landlord name"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block">
-                        <span class="field-label">IC / Passport</span>
-                        <input
-                            type="text"
-                            id="LANDLORD_IC"
-                            placeholder="IC / Passport number"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block">
-                        <span class="field-label">Phone</span>
-                        <input
-                            type="text"
-                            id="LANDLORD_PHONE"
-                            placeholder="Phone number"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block sm:col-span-2">
-                        <span class="field-label">Address</span>
-                        <textarea
-                            id="LANDLORD_ADDRESS"
-                            rows="2"
-                            placeholder="Landlord address"
-                            class="field resize-y"
-                        ></textarea>
-                    </label>
-
-                </div>
-            </section>
-
-
-            <!-- TENANT -->
-            <section class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 p-5 sm:p-6 shadow-sm">
-
-                <div class="mb-5">
-                    <h3 class="font-bold text-lg">
-                        Tenant Details
-                    </h3>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                    <label class="block">
-                        <span class="field-label">Full Name</span>
-                        <input
-                            type="text"
-                            id="TENANT_NAME"
-                            placeholder="Tenant name"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block">
-                        <span class="field-label">IC / Passport</span>
-                        <input
-                            type="text"
-                            id="TENANT_IC"
-                            placeholder="IC / Passport number"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block">
-                        <span class="field-label">Phone</span>
-                        <input
-                            type="text"
-                            id="TENANT_PHONE"
-                            placeholder="Phone number"
-                            class="field"
-                        >
-                    </label>
-
-                    <label class="block sm:col-span-2">
-                        <span class="field-label">Address</span>
-                        <textarea
-                            id="TENANT_ADDRESS"
-                            rows="2"
-                            placeholder="Tenant address"
-                            class="field resize-y"
-                        ></textarea>
-                    </label>
-
-                </div>
-            </section>
-
-
-            <!-- PROPERTY / FINANCIAL -->
-            <section class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 p-5 sm:p-6 shadow-sm">
-
-                <div class="mb-5">
-                    <h3 class="font-bold text-lg">
-                        Property & Financial Details
-                    </h3>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                    <label class="block sm:col-span-2">
-                        <span class="field-label">Property Address</span>
-
-                        <textarea
-                            id="PROPERTY_ADDRESS"
-                            rows="2"
-                            placeholder="Full property address"
-                            class="field resize-y"
-                        ></textarea>
-                    </label>
-
-
-                    <label class="block">
-                        <span class="field-label">Rental Amount</span>
-
-                        <input
-                            type="text"
-                            id="RENTAL_AMOUNT"
-                            placeholder="e.g. RM 1,500.00"
-                            class="field"
-                        >
-                    </label>
-
-
-                    <label class="block">
-                        <span class="field-label">Rental Amount in Words</span>
-
-                        <input
-                            type="text"
-                            id="RENTAL_NUMBER"
-                            placeholder="Rental amount in words"
-                            class="field"
-                        >
-                    </label>
-
-
-                    <label class="block">
-                        <span class="field-label">Deposit Amount</span>
-
-                        <input
-                            type="text"
-                            id="DEPOSIT_AMOUNT"
-                            placeholder="e.g. RM 3,000.00"
-                            class="field"
-                        >
-                    </label>
-
-
-                    <label class="block">
-                        <span class="field-label">Deposit Amount in Words</span>
-
-                        <input
-                            type="text"
-                            id="DEPOSIT_NUMBER"
-                            placeholder="Deposit amount in words"
-                            class="field"
-                        >
-                    </label>
-
-
-                    <label class="block">
-                        <span class="field-label">Utility Deposit</span>
-
-                        <input
-                            type="text"
-                            id="UTILITY_DEPOSIT"
-                            placeholder="e.g. RM 500.00"
-                            class="field"
-                        >
-                    </label>
-
-
-                    <label class="block">
-                        <span class="field-label">Utility Deposit in Words</span>
-
-                        <input
-                            type="text"
-                            id="UTILITY_NUMBER"
-                            placeholder="Utility deposit in words"
-                            class="field"
-                        >
-                    </label>
-
-                </div>
-            </section>
-
-
-            <!-- GENERATE -->
-            <section class="rounded-2xl border border-amber-200 dark:border-amber-400/20 bg-amber-50 dark:bg-amber-400/5 p-5 sm:p-6">
-
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
-                    <div>
-                        <h3 class="font-bold">
-                            Ready to Generate?
-                        </h3>
-
-                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                            Your agreement is generated directly in your browser.
-                        </p>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Duration Num ([DURATION_YEAR])
+                        </label>
+                        <input type="text" id="DURATION_YEAR" value="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
                     </div>
 
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Start Date ([START_DATE])
+                        </label>
+                        <input type="text" id="START_DATE" value="1st January 2025" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
 
-                    <button
-                        id="generateBtn"
-                        type="button"
-                        class="w-full sm:w-auto rounded-xl bg-slate-900 dark:bg-amber-400 text-white dark:text-slate-900 px-6 py-3 font-bold text-sm shadow-sm hover:opacity-90 active:scale-[.99]"
-                    >
-                        Generate Agreement
-                    </button>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            End Date ([END_DATE])
+                        </label>
+                        <input type="text" id="END_DATE" value="31st December 2026" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Option to Renew ([RENEW])
+                        </label>
+                        <input type="text" id="RENEW" value="ONE" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Renew Num ([RENEW_YEAR])
+                        </label>
+                        <input type="text" id="RENEW_YEAR" value="1" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
 
                 </div>
 
-                <p
-                    id="status"
-                    class="mt-4 text-sm hidden"
-                ></p>
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Bank Payment Details ([BANK_DETAIL])
+                    </label>
+                    <input type="text" id="BANK_DETAIL" value="MAYBANK 1234567890 (AYUB EWAN)" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                </div>
 
-            </section>
+            </div>
 
-        </div>
+            <!-- Landlord Particulars -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                        Landlord Particulars
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Name ([LANDLORD_NAME])
+                        </label>
+                        <input type="text" id="LANDLORD_NAME" value="AYUB EWAN BIN MOHD FADZLY" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            NRIC ([LANDLORD_IC])
+                        </label>
+                        <input type="text" id="LANDLORD_IC" value="870707-15-5049" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Phone ([LANDLORD_PHONE])
+                    </label>
+                    <input type="text" id="LANDLORD_PHONE" value="016-84444877" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Address ([LANDLORD_ADDRESS])
+                    </label>
+                    <textarea id="LANDLORD_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">NO.106, THE LAKE RESIDENCE, JALAN PUTRA PERDANA 16, TAMAN PUTRA PERDANA, 47100 PUCHONG, SELANGOR</textarea>
+                </div>
+
+            </div>
+
+            <!-- Tenant Particulars -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                        Tenant Particulars
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Name ([TENANT_NAME])
+                        </label>
+                        <input type="text" id="TENANT_NAME" value="ZHARIF FAHMI BIN SHAHIDAN" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            NRIC ([TENANT_IC])
+                        </label>
+                        <input type="text" id="TENANT_IC" value="980717-06-5319" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Phone ([TENANT_PHONE])
+                    </label>
+                    <input type="text" id="TENANT_PHONE" value="0111-1987782" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Address ([TENANT_ADDRESS])
+                    </label>
+                    <textarea id="TENANT_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">A-4-2, PPAM KETUMBAR, PRESINT 17, 62150 W.P. PUTRAJAYA</textarea>
+                </div>
+
+            </div>
+
+            <!-- Property & Financials -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                        Property & Financial Terms
+                    </h2>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Property Address ([PROPERTY_ADDRESS])
+                    </label>
+                    <textarea id="PROPERTY_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">13-4-2, KEKWA APARTMENT, JALAN PUTRA PERDANA 5B, TAMAN PUTRA PERDANA, 47100 PUCHONG, SELANGOR</textarea>
+                </div>
+
+                <!-- Structured Financial Grid -->
+                <div class="grid grid-cols-2 gap-3">
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Rental Words ([RENTAL_AMOUNT])
+                        </label>
+                        <input type="text" id="RENTAL_AMOUNT" value="EIGHT HUNDRED" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Sec Deposit Words ([DEPOSIT_AMOUNT])
+                        </label>
+                        <input type="text" id="DEPOSIT_AMOUNT" value="ONE THOUSAND SIX HUNDRED" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Rental Num ([RENTAL_NUMBER])
+                        </label>
+                        <input type="text" id="RENTAL_NUMBER" value="800.00" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Sec Deposit Num ([DEPOSIT_NUMBER])
+                        </label>
+                        <input type="text" id="DEPOSIT_NUMBER" value="1,600.00" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Util Deposit Words ([UTILITY_DEPOSIT])
+                        </label>
+                        <input type="text" id="UTILITY_DEPOSIT" value="FOUR HUNDRED" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Util Deposit Num ([UTILITY_NUMBER])
+                        </label>
+                        <input type="text" id="UTILITY_NUMBER" value="400.00" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Action Button -->
+            <button onclick="generateDoc()" class="w-full bg-[#f5b748] hover:bg-amber-400 text-black font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-amber-500/10 transition active:scale-[0.99]">
+                Generate Agreement (.docx)
+            </button>
+
+        </form>
     </main>
-
-
-    <footer class="max-w-5xl mx-auto px-4 sm:px-6 pb-8 text-center text-xs text-slate-400">
-        AE Tenancy Portal
-    </footer>
-
 
     <script>
 
-        /* ============================================================
-           THEME
-        ============================================================ */
+        /* =========================================================
+           EXISTING THEME LOGIC — UNCHANGED
+        ========================================================= */
 
-        const savedTheme = localStorage.getItem('theme');
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
 
-        if (savedTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-        }
-
-
-        function updateThemeIcon() {
-
-            document.getElementById('themeIcon').textContent =
-                document.documentElement.classList.contains('dark')
-                    ? '🌙'
-                    : '☀️';
-        }
-
-
-        updateThemeIcon();
-
-
-        document.getElementById('themeToggle').addEventListener('click', () => {
-
-            document.documentElement.classList.toggle('dark');
-
-            localStorage.setItem(
-                'theme',
-                document.documentElement.classList.contains('dark')
-                    ? 'dark'
-                    : 'light'
-            );
-
-            updateThemeIcon();
-
-        });
-
-
-
-        /* ============================================================
-           FILE STATUS
-        ============================================================ */
-
-        document.getElementById('masterDoc').addEventListener('change', (event) => {
-
-            const file = event.target.files[0];
-
-            const status = document.getElementById('fileStatus');
-
-
-            if (file) {
-
-                status.textContent =
-                    `Selected: ${file.name}`;
-
-                status.className =
-                    'mt-2 text-xs text-emerald-600 dark:text-emerald-400';
-
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.innerText = '☀️ Light';
+                localStorage.setItem('theme', 'light');
             } else {
-
-                status.textContent =
-                    'No document selected.';
-
-                status.className =
-                    'mt-2 text-xs text-slate-500 dark:text-slate-400';
-
+                html.classList.add('dark');
+                icon.innerText = '🌙 Dark';
+                localStorage.setItem('theme', 'dark');
             }
+        }
 
-        });
-
-
-
-        /* ============================================================
-           XML ESCAPING
-        ============================================================ */
-
-        function escapeXml(value) {
-
-            return String(value ?? '')
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&apos;');
-
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-icon').innerText = '🌙 Dark';
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.getElementById('theme-icon').innerText = '☀️ Light';
         }
 
 
-
-        /* ============================================================
-           FORM VALUES
-        ============================================================ */
-
-        function getReplacements() {
-
-            const ids = [
-
-                'DURATION',
-                'DURATION_YEAR',
-
-                'START_DATE',
-                'END_DATE',
-
-                'RENEW',
-                'RENEW_YEAR',
-
-                'BANK_DETAIL',
-
-                'LANDLORD_NAME',
-                'LANDLORD_IC',
-                'LANDLORD_PHONE',
-                'LANDLORD_ADDRESS',
-
-                'TENANT_NAME',
-                'TENANT_IC',
-                'TENANT_PHONE',
-                'TENANT_ADDRESS',
-
-                'PROPERTY_ADDRESS',
-
-                'RENTAL_AMOUNT',
-                'RENTAL_NUMBER',
-
-                'DEPOSIT_AMOUNT',
-                'DEPOSIT_NUMBER',
-
-                'UTILITY_DEPOSIT',
-                'UTILITY_NUMBER'
-
-            ];
-
-
-            const replacements = {};
-
-
-            ids.forEach(id => {
-
-                const element =
-                    document.getElementById(id);
-
-                replacements[id] =
-                    element
-                        ? element.value.trim()
-                        : '';
-
-            });
-
-
-            return replacements;
-        }
-
-
-
-        /* ============================================================
-           PLACEHOLDER REPLACEMENT ENGINE
-           
-           This version specifically handles Word's habit of splitting
-           placeholders across multiple <w:t> nodes.
-        ============================================================ */
-
-        function replacePlaceholdersInXml(xml, replacements) {
-
-            const parser = new DOMParser();
-
-            const serializer = new XMLSerializer();
-
-            const doc =
-                parser.parseFromString(xml, 'application/xml');
-
-
-            /*
-             * If XML parsing fails, use the fallback method.
-             */
-
-            if (
-                doc.getElementsByTagName('parsererror').length
-            ) {
-
-                return replacePlaceholdersFallback(
-                    xml,
-                    replacements
-                );
-
-            }
-
-
-            /*
-             * Word text nodes.
-             */
-
-            let textNodes =
-                Array.from(
-                    doc.getElementsByTagName('w:t')
-                );
-
-
-            /*
-             * --------------------------------------------------------
-             * STEP 1
-             *
-             * Replace placeholders that already exist completely
-             * inside a single <w:t>.
-             * --------------------------------------------------------
-             */
-
-            for (const node of textNodes) {
-
-                let text =
-                    node.textContent || '';
-
-
-                for (
-                    const [key, value]
-                    of Object.entries(replacements)
-                ) {
-
-                    const escapedKey =
-                        key.replace(
-                            /[.*+?^${}()|[\]\\]/g,
-                            '\\$&'
-                        );
-
-
-                    const regex =
-                        new RegExp(
-                            '\\[\\s*' +
-                            escapedKey +
-                            '\\s*\\]',
-                            'gi'
-                        );
-
-
-                    text =
-                        text.replace(
-                            regex,
-                            escapeXml(value)
-                        );
-
-                }
-
-
-                node.textContent = text;
-
-            }
-
-
-
-            /*
-             * --------------------------------------------------------
-             * STEP 2
-             *
-             * Rebuild the visible text stream of Word's <w:t>
-             * nodes and detect placeholders that cross runs.
-             *
-             * Example:
-             *
-             * <w:t>[TEN</w:t>
-             * <w:t>ANT_</w:t>
-             * <w:t>NAME]</w:t>
-             *
-             * becomes:
-             *
-             * [TENANT_NAME]
-             * --------------------------------------------------------
-             */
-
-            let safetyCounter = 0;
-
-
-            while (safetyCounter < 100) {
-
-                safetyCounter++;
-
-
-                textNodes =
-                    Array.from(
-                        doc.getElementsByTagName('w:t')
-                    );
-
-
-                let found = false;
-
-
-                for (
-                    let startIndex = 0;
-                    startIndex < textNodes.length;
-                    startIndex++
-                ) {
-
-                    const startNode =
-                        textNodes[startIndex];
-
-
-                    const startText =
-                        startNode.textContent || '';
-
-
-                    const openBracket =
-                        startText.lastIndexOf('[');
-
-
-                    if (openBracket === -1) {
-                        continue;
-                    }
-
-
-                    let combined =
-                        startText.substring(openBracket);
-
-
-                    let endIndex =
-                        startIndex;
-
-
-                    /*
-                     * Continue collecting text from subsequent
-                     * Word text nodes until we find ].
-                     */
-
-                    while (
-                        !combined.includes(']') &&
-                        endIndex + 1 < textNodes.length
-                    ) {
-
-                        endIndex++;
-
-                        combined +=
-                            textNodes[endIndex].textContent || '';
-
-                    }
-
-
-                    if (!combined.includes(']')) {
-                        continue;
-                    }
-
-
-                    const closeBracket =
-                        combined.indexOf(']');
-
-
-                    const candidate =
-                        combined.substring(
-                            0,
-                            closeBracket + 1
-                        );
-
-
-                    /*
-                     * Recognise:
-                     *
-                     * [TENANT_NAME]
-                     * [ TENANT_NAME ]
-                     * etc.
-                     */
-
-                    const match =
-                        candidate.match(
-                            /^\[\s*([A-Z0-9_]+)\s*\]$/i
-                        );
-
-
-                    if (!match) {
-                        continue;
-                    }
-
-
-                    const key =
-                        match[1].toUpperCase();
-
-
-                    if (
-                        !Object.prototype.hasOwnProperty.call(
-                            replacements,
-                            key
-                        )
-                    ) {
-                        continue;
-                    }
-
-
-                    const replacement =
-                        replacements[key];
-
-
-                    /*
-                     * Text before the placeholder in the
-                     * first text node.
-                     */
-
-                    const prefix =
-                        startText.substring(
-                            0,
-                            openBracket
-                        );
-
-
-                    /*
-                     * Text after ].
-                     */
-
-                    const suffix =
-                        combined.substring(
-                            closeBracket + 1
-                        );
-
-
-                    /*
-                     * Put the replacement into the first
-                     * text node.
-                     */
-
-                    startNode.textContent =
-                        prefix +
-                        replacement +
-                        suffix;
-
-
-                    /*
-                     * Empty all subsequent nodes that
-                     * contributed to this placeholder.
-                     */
-
-                    for (
-                        let i = startIndex + 1;
-                        i <= endIndex;
-                        i++
-                    ) {
-
-                        textNodes[i].textContent = '';
-
-                    }
-
-
-                    found = true;
-
-                    break;
-
-                }
-
-
-                /*
-                 * Stop when there are no more cross-run
-                 * placeholders.
-                 */
-
-                if (!found) {
-                    break;
-                }
-
-            }
-
-
-            return serializer.serializeToString(doc);
-
-        }
-
-
-
-        /* ============================================================
-           FALLBACK PLACEHOLDER ENGINE
-        ============================================================ */
-
-        function replacePlaceholdersFallback(
-            xml,
-            replacements
-        ) {
-
-            let content = xml;
-
-
-            for (
-                const [key, value]
-                of Object.entries(replacements)
-            ) {
-
-                const escapedKey =
-                    key.replace(
-                        /[.*+?^${}()|[\]\\]/g,
-                        '\\$&'
-                    );
-
-
-                const escapedValue =
-                    escapeXml(value);
-
-
-                /*
-                 * Normal placeholder.
-                 */
-
-                const directRegex =
-                    new RegExp(
-                        '\\[\\s*' +
-                        escapedKey +
-                        '\\s*\\]',
-                        'gi'
-                    );
-
-
-                content =
-                    content.replace(
-                        directRegex,
-                        escapedValue
-                    );
-
-
-                /*
-                 * Placeholder split by XML tags.
-                 */
-
-                const brokenKey =
-                    key
-                        .split('')
-                        .map(character =>
-                            character.replace(
-                                /[.*+?^${}()|[\]\\]/g,
-                                '\\$&'
-                            )
-                        )
-                        .join(
-                            '(?:<[^>]+>)*'
-                        );
-
-
-                const brokenRegex =
-                    new RegExp(
-                        '\\[\\s*' +
-                        brokenKey +
-                        '\\s*\\]',
-                        'gi'
-                    );
-
-
-                content =
-                    content.replace(
-                        brokenRegex,
-                        escapedValue
-                    );
-
-            }
-
-
-            return content;
-
-        }
-
-
-
-        /* ============================================================
-           GENERATE DOCX
-        ============================================================ */
+        /* =========================================================
+           EXISTING DOCUMENT GENERATION LOGIC — UNCHANGED
+        ========================================================= */
 
         async function generateDoc() {
 
-            const fileInput =
-                document.getElementById('masterDoc');
+            const fileInput = document.getElementById('docx-input');
 
-
-            const status =
-                document.getElementById('status');
-
-
-            const button =
-                document.getElementById('generateBtn');
-
-
-            function showStatus(
-                message,
-                type = 'info'
-            ) {
-
-                status.textContent =
-                    message;
-
-
-                status.className =
-                    'mt-4 text-sm';
-
-
-                status.classList.remove(
-                    'hidden'
-                );
-
-
-                if (type === 'error') {
-
-                    status.classList.add(
-                        'text-red-600',
-                        'dark:text-red-400'
-                    );
-
-                }
-
-                else if (type === 'success') {
-
-                    status.classList.add(
-                        'text-emerald-600',
-                        'dark:text-emerald-400'
-                    );
-
-                }
-
-                else {
-
-                    status.classList.add(
-                        'text-slate-600',
-                        'dark:text-slate-400'
-                    );
-
-                }
-
-            }
-
-
-
-            /*
-             * Check document.
-             */
-
-            if (!fileInput.files.length) {
-
-                showStatus(
-                    'Please upload your master .docx document first.',
-                    'error'
-                );
-
+            if (!fileInput.files[0]) {
+                alert('Please upload your .docx master document first.');
                 return;
             }
 
-
-            const file =
-                fileInput.files[0];
-
-
-            if (
-                !file.name
-                    .toLowerCase()
-                    .endsWith('.docx')
-            ) {
-
-                showStatus(
-                    'Please select a .docx file.',
-                    'error'
-                );
-
-                return;
-            }
-
-
-            button.disabled = true;
-
-            button.classList.add(
-                'opacity-60',
-                'cursor-not-allowed'
-            );
-
-
-            showStatus(
-                'Generating agreement…'
-            );
-
+            const replacements = {
+                "DURATION": document.getElementById('DURATION').value,
+                "DURATION_YEAR": document.getElementById('DURATION_YEAR').value,
+                "START_DATE": document.getElementById('START_DATE').value,
+                "END_DATE": document.getElementById('END_DATE').value,
+                "RENEW": document.getElementById('RENEW').value,
+                "RENEW_YEAR": document.getElementById('RENEW_YEAR').value,
+                "BANK_DETAIL": document.getElementById('BANK_DETAIL').value,
+                "LANDLORD_NAME": document.getElementById('LANDLORD_NAME').value,
+                "LANDLORD_IC": document.getElementById('LANDLORD_IC').value,
+                "LANDLORD_PHONE": document.getElementById('LANDLORD_PHONE').value,
+                "LANDLORD_ADDRESS": document.getElementById('LANDLORD_ADDRESS').value,
+                "TENANT_NAME": document.getElementById('TENANT_NAME').value,
+                "TENANT_IC": document.getElementById('TENANT_IC').value,
+                "TENANT_PHONE": document.getElementById('TENANT_PHONE').value,
+                "TENANT_ADDRESS": document.getElementById('TENANT_ADDRESS').value,
+                "PROPERTY_ADDRESS": document.getElementById('PROPERTY_ADDRESS').value,
+                "RENTAL_AMOUNT": document.getElementById('RENTAL_AMOUNT').value,
+                "RENTAL_NUMBER": document.getElementById('RENTAL_NUMBER').value,
+                "DEPOSIT_AMOUNT": document.getElementById('DEPOSIT_AMOUNT').value,
+                "DEPOSIT_NUMBER": document.getElementById('DEPOSIT_NUMBER').value,
+                "UTILITY_DEPOSIT": document.getElementById('UTILITY_DEPOSIT').value,
+                "UTILITY_NUMBER": document.getElementById('UTILITY_NUMBER').value,
+            };
 
             try {
 
-                const replacements =
-                    getReplacements();
+                const zip = await JSZip.loadAsync(fileInput.files[0]);
 
+                const xmlFiles = Object.keys(zip.files).filter(
+                    fileName =>
+                        fileName.startsWith('word/') &&
+                        fileName.endsWith('.xml')
+                );
 
-                /*
-                 * Load DOCX.
-                 */
+                for (const fileName of xmlFiles) {
 
-                const zip =
-                    await JSZip.loadAsync(
-                        await file.arrayBuffer()
-                    );
+                    const xmlFile = zip.file(fileName);
 
+                    if (xmlFile) {
 
-                /*
-                 * Word XML files.
-                 *
-                 * This includes:
-                 *
-                 * word/document.xml
-                 * word/header*.xml
-                 * word/footer*.xml
-                 * etc.
-                 */
+                        let content = await xmlFile.async("string");
 
-                const xmlFiles =
-                    Object.keys(zip.files)
-                        .filter(name =>
-                            name.startsWith('word/') &&
-                            name.endsWith('.xml')
+                        content = content.replace(
+                            /(<w:t[^>]*>)([\s\S]*?)(<\/w:t>)/g,
+                            (match, openTag, text, closeTag) => {
+                                return openTag + text + closeTag;
+                            }
                         );
 
-
-                let modifiedFiles = 0;
-
-
-                for (
-                    const fileName
-                    of xmlFiles
-                ) {
-
-                    const entry =
-                        zip.files[fileName];
-
-
-                    if (entry.dir) {
-                        continue;
-                    }
-
-
-                    const original =
-                        await entry.async('string');
-
-
-                    const updated =
-                        replacePlaceholdersInXml(
-                            original,
-                            replacements
+                        content = content.replace(
+                            /\[\s*(?:<[^>]+>)*\s*([A-Z0-9_]+)\s*(?:<[^>]+>)*\s*\]/g,
+                            '[$1]'
                         );
 
+                        for (const key of Object.keys(replacements)) {
 
-                    if (updated !== original) {
-                        modifiedFiles++;
+                            const brokenRegex = new RegExp(
+                                '\\[\\s*' +
+                                key.split('').join('(?:<[^>]+>)*') +
+                                '\\s*\\]',
+                                'g'
+                            );
+
+                            content = content.replace(
+                                brokenRegex,
+                                `[${key}]`
+                            );
+                        }
+
+                        for (const [key, value] of Object.entries(replacements)) {
+
+                            const safeValue = String(value)
+                                .replace(/&/g, '&amp;')
+                                .replace(/</g, '&lt;')
+                                .replace(/>/g, '&gt;')
+                                .replace(/"/g, '&quot;')
+                                .replace(/'/g, '&apos;');
+
+                            const targetKey = `[${key}]`;
+
+                            content = content
+                                .split(targetKey)
+                                .join(safeValue);
+                        }
+
+                        zip.file(fileName, content);
                     }
-
-
-                    zip.file(
-                        fileName,
-                        updated
-                    );
-
                 }
 
-
-                /*
-                 * Filename.
-                 */
+                const blob = await zip.generateAsync({
+                    type: "blob",
+                    mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                });
 
                 const tenantName =
-                    replacements.TENANT_NAME
-                        .replace(
-                            /[^a-z0-9]/gi,
-                            '_'
-                        );
-
+                    replacements["TENANT_NAME"]
+                        .replace(/[^a-z0-9]/gi, '_');
 
                 const fileName =
-                    `Tenancy_Agreement_${tenantName || 'Generated'}.docx`;
+                    `Tenancy_Agreement_${tenantName}.docx`;
 
+                const link = document.createElement('a');
 
-                /*
-                 * Generate DOCX.
-                 */
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
 
-                const output =
-                    await zip.generateAsync({
-
-                        type: 'blob',
-
-                        mimeType:
-                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-
-                    });
-
-
-                /*
-                 * Download.
-                 */
-
-                const url =
-                    URL.createObjectURL(
-                        output
-                    );
-
-
-                const link =
-                    document.createElement('a');
-
-
-                link.href = url;
-
-                link.download =
-                    fileName;
-
-
-                document.body.appendChild(
-                    link
-                );
-
-
+                document.body.appendChild(link);
                 link.click();
+                document.body.removeChild(link);
 
-                link.remove();
+                URL.revokeObjectURL(link.href);
 
+            } catch (err) {
 
-                setTimeout(
-                    () =>
-                        URL.revokeObjectURL(url),
-                    1000
-                );
-
-
-                showStatus(
-                    `Agreement generated successfully: ${fileName}`,
-                    'success'
-                );
-
-
-                console.log(
-                    'Modified Word XML files:',
-                    modifiedFiles
-                );
-
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    'Generation error:',
-                    error
-                );
-
-
-                showStatus(
-                    `Could not generate the agreement. ${
-                        error.message ||
-                        'Please check your master document.'
-                    }`,
-                    'error'
+                alert(
+                    "Error processing document: " +
+                    err.message
                 );
 
             }
-
-            finally {
-
-                button.disabled = false;
-
-
-                button.classList.remove(
-                    'opacity-60',
-                    'cursor-not-allowed'
-                );
-
-            }
-
         }
 
 
-
-        document
-            .getElementById('generateBtn')
-            .addEventListener(
-                'click',
-                generateDoc
-            );
-
-
-
-        /* ============================================================
-           SERVICE WORKER
-        ============================================================ */
+        /* =========================================================
+           PWA SERVICE WORKER
+        ========================================================= */
 
         if ('serviceWorker' in navigator) {
 
-            window.addEventListener(
-                'load',
-                () => {
+            window.addEventListener('load', () => {
 
-                    navigator.serviceWorker
-                        .register('./sw.js')
+                navigator.serviceWorker
+                    .register('./sw.js')
+                    .then(registration => {
 
-                        .then(
-                            registration => {
-
-                                console.log(
-                                    'AE Tenancy Portal service worker registered:',
-                                    registration.scope
-                                );
-
-                            }
-                        )
-
-                        .catch(
-                            error => {
-
-                                console.error(
-                                    'AE Tenancy Portal service worker registration failed:',
-                                    error
-                                );
-
-                            }
+                        console.log(
+                            'AE Tenancy Portal service worker registered:',
+                            registration.scope
                         );
 
-                }
-            );
+                    })
+                    .catch(error => {
+
+                        console.error(
+                            'AE Tenancy Portal service worker registration failed:',
+                            error
+                        );
+
+                    });
+
+            });
 
         }
 
 
-
-        /* ============================================================
-           NATIVE CHROME INSTALL PROMPT
+        /* =========================================================
+           NATIVE CHROME PWA INSTALL PROMPT
            
            IMPORTANT:
-           
-           There is NO custom install button.
-           There is NO custom install banner.
-           
-           We capture Chrome's native installation event and
-           request the browser's own installation dialog.
-        ============================================================ */
+           This does NOT create a custom install button/banner.
+           It uses Chrome's own native installation dialog.
+        ========================================================= */
 
         let deferredInstallPrompt = null;
-
-
-        /*
-         * Chrome fires this event when the application satisfies
-         * its installability requirements and Chrome decides that
-         * the event can be offered to the page.
-         */
 
         window.addEventListener(
             'beforeinstallprompt',
             event => {
 
                 console.log(
-                    'AE Tenancy Portal is installable.'
+                    'AE Tenancy Portal: beforeinstallprompt fired.'
                 );
 
-
                 /*
-                 * Prevent Chrome from automatically consuming
-                 * the event.
+                 * Stop Chrome from deciding to show its own
+                 * mini-infobar automatically.
+                 *
+                 * We retain the event so we can call prompt().
                  */
-
                 event.preventDefault();
 
+                deferredInstallPrompt = event;
 
                 /*
-                 * Keep the native prompt available.
+                 * Give Chrome a moment after the event fires,
+                 * then request the native installation dialog.
                  */
+                setTimeout(async () => {
 
-                deferredInstallPrompt =
-                    event;
+                    if (!deferredInstallPrompt) {
+                        return;
+                    }
 
+                    try {
 
-                /*
-                 * Request the native Chrome installation dialog.
-                 *
-                 * This is Chrome's own UI.
-                 */
+                        console.log(
+                            'AE Tenancy Portal: requesting native install prompt...'
+                        );
 
-                setTimeout(
-                    async () => {
+                        await deferredInstallPrompt.prompt();
 
-                        if (!deferredInstallPrompt) {
-                            return;
-                        }
+                        const choice =
+                            await deferredInstallPrompt.userChoice;
 
+                        console.log(
+                            'AE Tenancy Portal installation result:',
+                            choice.outcome
+                        );
 
-                        try {
+                    } catch (error) {
 
-                            await deferredInstallPrompt.prompt();
+                        console.log(
+                            'AE Tenancy Portal: native install prompt could not be shown.',
+                            error
+                        );
 
+                    }
 
-                            const result =
-                                await deferredInstallPrompt.userChoice;
+                    deferredInstallPrompt = null;
 
-
-                            console.log(
-                                'PWA installation result:',
-                                result.outcome
-                            );
-
-
-                        }
-
-                        catch (error) {
-
-                            console.log(
-                                'Native install prompt was not shown:',
-                                error
-                            );
-
-                        }
-
-
-                        /*
-                         * The prompt event is one-use.
-                         */
-
-                        deferredInstallPrompt =
-                            null;
-
-                    },
-                    800
-                );
+                }, 800);
 
             }
         );
 
 
-        /*
-         * Fired after installation.
-         */
+        /* =========================================================
+           APP INSTALLED
+        ========================================================= */
 
         window.addEventListener(
             'appinstalled',
             () => {
 
                 console.log(
-                    'AE Tenancy Portal installed.'
+                    'AE Tenancy Portal has been installed.'
                 );
 
-
-                deferredInstallPrompt =
-                    null;
+                deferredInstallPrompt = null;
 
             }
         );
