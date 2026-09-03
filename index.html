@@ -182,71 +182,6 @@
 
         <form onsubmit="return false;" class="space-y-5">
 
-            <!-- Tenancy Details -->
-            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
-
-                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
-                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
-                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                        Tenancy Period & Banking
-                    </h2>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-
-                    <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Duration Text ([DURATION])
-                        </label>
-                        <input type="text" id="DURATION" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
-
-                    <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Duration Num ([DURATION_YEAR])
-                        </label>
-                        <input type="text" id="DURATION_YEAR" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
-
-                    <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Start Date ([START_DATE])
-                        </label>
-                        <input type="text" id="START_DATE" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
-
-                    <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            End Date ([END_DATE])
-                        </label>
-                        <input type="text" id="END_DATE" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
-
-                    <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Option to Renew ([RENEW])
-                        </label>
-                        <input type="text" id="RENEW" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
-
-                    <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Renew Num ([RENEW_YEAR])
-                        </label>
-                        <input type="text" id="RENEW_YEAR" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
-
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                        Bank Payment Details ([BANK_DETAIL])
-                    </label>
-                    <input type="text" id="BANK_DETAIL" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                </div>
-
-            </div>
-
             <!-- Landlord Particulars -->
             <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
 
@@ -260,34 +195,34 @@
                 <div class="grid grid-cols-2 gap-3">
 
                     <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Name ([LANDLORD_NAME])
-                        </label>
-                        <input type="text" id="LANDLORD_NAME" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Full Name
+    </label>
+    <input type="text" id="LANDLORD_NAME" value="" placeholder="e.g. AHMAD BIN ALI"  oninput="this.value = this.value.toUpperCase()"class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                     <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            NRIC ([LANDLORD_IC])
-                        </label>
-                        <input type="text" id="LANDLORD_IC" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        NRIC
+    </label>
+    <input type="text" id="LANDLORD_IC" value="" placeholder="e.g. 800101-01-1234" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                        Phone ([LANDLORD_PHONE])
-                    </label>
-                    <input type="text" id="LANDLORD_PHONE" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Phone Number
+    </label>
+    <input type="text" id="LANDLORD_PHONE" value="" placeholder="e.g. 012-3456789" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                 <div>
-                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                        Address ([LANDLORD_ADDRESS])
-                    </label>
-                    <textarea id="LANDLORD_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"></textarea>
-                </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Address
+    </label>
+    <textarea id="LANDLORD_ADDRESS" rows="2" placeholder="e.g. NO. 10, JALAN ABC, 43000 KAJANG, SELANGOR" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"></textarea>
+</div>
 
             </div>
 
@@ -304,34 +239,34 @@
                 <div class="grid grid-cols-2 gap-3">
 
                     <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Name ([TENANT_NAME])
-                        </label>
-                        <input type="text" id="TENANT_NAME" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Full Name
+    </label>
+    <input type="text" id="TENANT_NAME" value="" placeholder="e.g. MUHAMMAD ALI BIN AHMAD" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                     <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            NRIC ([TENANT_IC])
-                        </label>
-                        <input type="text" id="TENANT_IC" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        NRIC
+    </label>
+    <input type="text" id="TENANT_IC" value="" placeholder="e.g. 900101-01-1234" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                        Phone ([TENANT_PHONE])
-                    </label>
-                    <input type="text" id="TENANT_PHONE" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Phone Number
+    </label>
+    <input type="text" id="TENANT_PHONE" value="" placeholder="e.g. 012-9876543" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                 <div>
-                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                        Address ([TENANT_ADDRESS])
-                    </label>
-                    <textarea id="TENANT_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"></textarea>
-                </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Address
+    </label>
+    <textarea id="TENANT_ADDRESS" rows="2" placeholder="e.g. NO. 20, JALAN XYZ, 40150 SHAH ALAM, SELANGOR" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"></textarea>
+</div>
 
             </div>
 
@@ -345,60 +280,179 @@
                     </h2>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                        Property Address ([PROPERTY_ADDRESS])
-                    </label>
-                    <textarea id="PROPERTY_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"></textarea>
+                <!-- Property Address -->
+<div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Property Address
+    </label>
+    <textarea
+        id="PROPERTY_ADDRESS"
+        rows="2"
+        placeholder="e.g. UNIT 10-05, ABC RESIDENCES, JALAN ABC, 43000 KAJANG, SELANGOR"
+        oninput="this.value = this.value.toUpperCase()"
+        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"
+    ></textarea>
+</div>
+
+<!-- Financial Terms -->
+<div class="grid grid-cols-2 gap-4">
+
+    <!-- Rental Amount -->
+    <div>
+        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+            Rental Amount (Text)
+        </label>
+        <input
+            type="text"
+            id="RENTAL_AMOUNT"
+            value=""
+            placeholder="e.g. THREE THOUSAND"
+            oninput="this.value = this.value.toUpperCase()"
+            class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"
+        >
+    </div>
+
+    <!-- Rental Amount RM -->
+    <div>
+        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+            Rental Amount (RM)
+        </label>
+        <input
+            type="text"
+            id="RENTAL_NUMBER"
+            value=""
+            placeholder="e.g. 3000"
+            oninput="this.value = this.value.toUpperCase()"
+            class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"
+        >
+    </div>
+
+    <!-- Security Deposit -->
+    <div>
+        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+            Security Deposit (Text)
+        </label>
+        <input
+            type="text"
+            id="DEPOSIT_AMOUNT"
+            value=""
+            placeholder="e.g. SIX THOUSAND"
+            oninput="this.value = this.value.toUpperCase()"
+            class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"
+        >
+    </div>
+
+    <!-- Security Deposit RM -->
+    <div>
+        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+            Security Deposit (RM)
+        </label>
+        <input
+            type="text"
+            id="DEPOSIT_NUMBER"
+            value=""
+            placeholder="e.g. 6000"
+            oninput="this.value = this.value.toUpperCase()"
+            class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"
+        >
+    </div>
+
+    <!-- Utility Deposit -->
+    <div>
+        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+            Utility Deposit (Text)
+        </label>
+        <input
+            type="text"
+            id="UTILITY_DEPOSIT"
+            value=""
+            placeholder="e.g. THREE HUNDRED"
+            oninput="this.value = this.value.toUpperCase()"
+            class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"
+        >
+    </div>
+
+    <!-- Utility Deposit RM -->
+    <div>
+        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+            Utility Deposit (RM)
+        </label>
+        <input
+            type="text"
+            id="UTILITY_NUMBER"
+            value=""
+            placeholder="e.g. 300"
+            oninput="this.value = this.value.toUpperCase()"
+            class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"
+        >
+    </div>
+
+</div>
+
+            </div>
+
+            <!-- Tenancy Details -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                        Tenancy Period & Banking
+                    </h2>
                 </div>
 
-                <!-- Structured Financial Grid -->
                 <div class="grid grid-cols-2 gap-3">
 
                     <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Rental Words ([RENTAL_AMOUNT])
-                        </label>
-                        <input type="text" id="RENTAL_AMOUNT" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Tenancy Duration (Text)
+    </label>
+    <input type="text" id="DURATION" value="" placeholder="e.g. TWO" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                     <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Sec Deposit Words ([DEPOSIT_AMOUNT])
-                        </label>
-                        <input type="text" id="DEPOSIT_AMOUNT" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Tenancy Duration (Years)
+    </label>
+    <input type="text" id="DURATION_YEAR" value="" placeholder="e.g. 2" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                     <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Rental Num ([RENTAL_NUMBER])
-                        </label>
-                        <input type="text" id="RENTAL_NUMBER" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Start Date
+    </label>
+    <input type="text" id="START_DATE" value="" placeholder="e.g. 1 JANUARY 2027" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                     <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Sec Deposit Num ([DEPOSIT_NUMBER])
-                        </label>
-                        <input type="text" id="DEPOSIT_NUMBER" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        End Date
+    </label>
+    <input type="text" id="END_DATE" value="" placeholder="e.g. 31 DECEMBER 2028" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                     <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Util Deposit Words ([UTILITY_DEPOSIT])
-                        </label>
-                        <input type="text" id="UTILITY_DEPOSIT" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Renewal Period (Text)
+    </label>
+    <input type="text" id="RENEW" value="" placeholder="e.g. ONE" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                     <div class="flex flex-col justify-end">
-                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                            Util Deposit Num ([UTILITY_NUMBER])
-                        </label>
-                        <input type="text" id="UTILITY_NUMBER" value="" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
-                    </div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Renewal Period (Years)
+    </label>
+    <input type="text" id="RENEW_YEAR" value="" placeholder="e.g. 1" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
 
                 </div>
 
+                <div>
+    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+        Bank Payment Details
+    </label>
+    <input type="text" id="BANK_DETAIL" value="" placeholder="e.g. MAYBANK - 1234567890" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+</div>
             </div>
 
             <!-- Action Button -->
