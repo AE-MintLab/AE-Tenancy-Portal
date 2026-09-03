@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AE Tenancy Portal</title>
-    <!-- Web App & Home Screen Icons -->
+
+    <!-- PWA Manifest & iOS Compatibility Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f5b748">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AE Tenancy">
     <link rel="apple-touch-icon" href="logo.png">
-    <link rel="icon" type="image/png" href="logo.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -35,6 +41,217 @@
                 </div>
             </div>
             
+            <div class="flex items-center space-x-2">
+                <!-- PWA Install Button (Hidden until install prompt is ready) -->
+                <button id="pwa-install-btn" onclick="triggerPWAInstall()" class="hidden p-2 rounded-xl bg-amber-500 text-black font-bold text-xs hover:bg-amber-400 transition shadow-md">
+                    📲 Install App
+                </button>
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-amber-400 hover:opacity-80 transition">
+                    <span id="theme-icon" class="text-xs font-bold uppercase tracking-wider">🌙 Dark</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-xl mx-auto p-4 space-y-5">
+        
+        <!-- File Upload Section -->
+        <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-amber-500/20 rounded-2xl p-5 shadow-sm dark:shadow-xl transition-colors duration-200">
+            <label class="block text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2">Master Document (.docx)</label>
+            <div class="relative border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-amber-500/50 transition rounded-xl p-4 text-center bg-slate-50 dark:bg-[#121316]/50">
+                <input type="file" id="docx-input" accept=".docx" class="block w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#f5b748] file:text-black hover:file:bg-amber-400 file:transition cursor-pointer"/>
+            </div>
+        </div>
+
+        <form onsubmit="return false;" class="space-y-5">
+            
+            <!-- Tenancy Details -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Tenancy Period & Banking</h2>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Duration Text ([DURATION])</label>
+                        <input type="text" id="DURATION" value="TWO" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Duration Num ([DURATION_YEAR])</label>
+                        <input type="text" id="DURATION_YEAR" value="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Start Date ([START_DATE])</label>
+                        <input type="text" id="START_DATE" value="1st January 2025" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">End Date ([END_DATE])</label>
+                        <input type="text" id="END_DATE" value="31st December 2026" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Option to Renew ([RENEW])</label>
+                        <input type="text" id="RENEW" value="ONE" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Renew Num ([RENEW_YEAR])</label>
+                        <input type="text" id="RENEW_YEAR" value="1" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Bank Payment Details ([BANK_DETAIL])</label>
+                    <input type="text" id="BANK_DETAIL" value="MAYBANK 1234567890 (AYUB EWAN)" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Landlord Particulars -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Landlord Particulars</h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Name ([LANDLORD_NAME])</label>
+                        <input type="text" id="LANDLORD_NAME" value="AYUB EWAN BIN MOHD FADZLY" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">NRIC ([LANDLORD_IC])</label>
+                        <input type="text" id="LANDLORD_IC" value="870707-15-5049" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Phone ([LANDLORD_PHONE])</label>
+                    <input type="text" id="LANDLORD_PHONE" value="016-84444877" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Address ([LANDLORD_ADDRESS])</label>
+                    <textarea id="LANDLORD_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">NO.106, THE LAKE RESIDENCE, JALAN PUTRA PERDANA 16, TAMAN PUTRA PERDANA, 47100 PUCHONG, SELANGOR</textarea>
+                </div>
+            </div>
+
+            <!-- Tenant Particulars -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Tenant Particulars</h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Name ([TENANT_NAME])</label>
+                        <input type="text" id="TENANT_NAME" value="ZHARIF FAHMI BIN SHAHIDAN" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">NRIC ([TENANT_IC])</label>
+                        <input type="text" id="TENANT_IC" value="980717-06-5319" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Phone ([TENANT_PHONE])</label>
+                    <input type="text" id="TENANT_PHONE" value="0111-1987782" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Address ([TENANT_ADDRESS])</label>
+                    <textarea id="TENANT_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">A-4-2, PPAM KETUMBAR, PRESINT 17, 62150 W.P. PUTRAJAYA</textarea>
+                </div>
+            </div>
+
+            <!-- Property & Financials -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Property & Financial Terms</h2>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Property Address ([PROPERTY_ADDRESS])</label>
+                    <textarea id="PROPERTY_ADDRESS" rows="2" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">13-4-2, KEKWA APARTMENT, JALAN PUTRA PERDANA 5B, TAMAN PUTRA PERDANA, 47100 PUCHONG, SELANGOR</textarea>
+                </div>
+
+                <!-- Structured Financial Grid -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Rental Words ([RENTAL_AMOUNT])</label>
+                        <input type="text" id="RENTAL_AMOUNT" value="EIGHT HUNDRED" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Sec Deposit Words ([DEPOSIT_AMOUNT])</label>
+                        <input type="text" id="DEPOSIT_AMOUNT" value="ONE THOUSAND SIX HUNDRED" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Rental Num ([RENTAL_NUMBER])</label>
+                        <input type="text" id="RENTAL_NUMBER" value="800.00" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Sec Deposit Num ([DEPOSIT_NUMBER])</label>
+                        <input type="text" id="DEPOSIT_NUMBER" value="1,600.00" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Util Deposit Words ([UTILITY_DEPOSIT])</label>
+                        <input type="text" id="UTILITY_DEPOSIT" value="FOUR HUNDRED" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Util Deposit Num ([UTILITY_NUMBER])</label>
+                        <input type="text" id="UTILITY_NUMBER" value="400.00" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <button onclick="generateDoc()" class="w-full bg-[#f5b748] hover:bg-amber-400 text-black font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-amber-500/10 transition active:scale-[0.99]">
+                Generate Agreement (.docx)
+            </button>
+        </form>
+    </main>
+
+    <script>
+        // Register Service Worker for PWA compliance
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Registration Failed', err));
+        }
+
+        // PWA Install Prompt Handler
+        let deferredPrompt;
+        const installBtn = document.getElementById('pwa-install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.classList.remove('hidden'); // Reveal install button
+        });
+
+        async function triggerPWAInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installBtn.classList.add('hidden');
+                }
+                deferredPrompt = null;
+            }
+        }
+
+        // Theme Toggle Logic
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.innerText = '☀️ Light';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                icon.innerText = '🌙 Dark';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.document            
             <div class="flex items-center space-x-2">
                 <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-amber-400 hover:opacity-80 transition">
                     <span id="theme-icon" class="text-xs font-bold uppercase tracking-wider">🌙 Dark</span>
