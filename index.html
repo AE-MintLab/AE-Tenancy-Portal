@@ -14,10 +14,15 @@
     <link rel="apple-touch-icon" href="./logo.png">
     <link rel="icon" type="image/png" href="./logo.png">
 
+    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
     <script>
         tailwind.config = {
@@ -32,10 +37,16 @@
     </style>
 </head>
 
+
 <body class="bg-slate-50 dark:bg-[#121316] text-slate-800 dark:text-slate-100 min-h-screen pb-12 transition-colors duration-200">
 
-    <!-- Header / Brand Banner -->
+
+    <!-- =========================================
+         HEADER / BRAND
+    ========================================== -->
+
     <header class="bg-white dark:bg-[#1a1c23] border-b border-slate-200 dark:border-amber-500/20 sticky top-0 z-50 backdrop-blur-md transition-colors duration-200">
+
         <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between">
 
             <div class="flex items-center space-x-3">
@@ -55,7 +66,9 @@
 
                 </div>
 
+
                 <div>
+
                     <h1 class="text-base font-bold text-slate-900 dark:text-slate-100 tracking-wide leading-tight">
                         AE TENANCY PORTAL
                     </h1>
@@ -63,9 +76,11 @@
                     <p class="text-[10px] text-amber-600 dark:text-amber-400/80 font-semibold">
                         Agreement Management System
                     </p>
+
                 </div>
 
             </div>
+
 
             <div class="flex items-center space-x-2">
 
@@ -73,25 +88,41 @@
                     onclick="toggleTheme()"
                     class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-amber-400 hover:opacity-80 transition"
                 >
-                    <span id="theme-icon" class="text-xs font-bold uppercase tracking-wider">
+
+                    <span
+                        id="theme-icon"
+                        class="text-xs font-bold uppercase tracking-wider"
+                    >
                         🌙 Dark
                     </span>
+
                 </button>
 
             </div>
 
         </div>
+
     </header>
 
 
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
     <main class="max-w-xl mx-auto p-4 space-y-5">
 
-        <!-- File Upload Section -->
+
+        <!-- =========================================
+             MASTER DOCUMENT UPLOAD
+        ========================================== -->
+
         <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-amber-500/20 rounded-2xl p-5 shadow-sm dark:shadow-xl transition-colors duration-200">
 
             <label class="block text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2">
                 Master Document (.docx)
             </label>
+
 
             <div class="relative border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-amber-500/50 transition rounded-xl p-4 text-center bg-slate-50 dark:bg-[#121316]/50">
 
@@ -100,17 +131,23 @@
                     id="docx-input"
                     accept=".docx"
                     class="block w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#f5b748] file:text-black hover:file:bg-amber-400 file:transition cursor-pointer"
-                />
+                >
 
             </div>
 
         </div>
 
 
+
         <form onsubmit="return false;" class="space-y-5">
 
-            <!-- Tenancy Details -->
+
+            <!-- =========================================
+                 TENANCY DETAILS
+            ========================================== -->
+
             <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
 
                 <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
 
@@ -125,6 +162,9 @@
 
                 <div class="grid grid-cols-2 gap-3">
 
+
+                    <!-- Duration -->
+
                     <div class="flex flex-col justify-end">
 
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
@@ -134,12 +174,13 @@
                         <input
                             type="text"
                             id="DURATION"
-                            value="TWO"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
                     </div>
 
+
+                    <!-- Duration Number -->
 
                     <div class="flex flex-col justify-end">
 
@@ -150,12 +191,13 @@
                         <input
                             type="text"
                             id="DURATION_YEAR"
-                            value="2"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
                     </div>
 
+
+                    <!-- Start Date -->
 
                     <div class="flex flex-col justify-end">
 
@@ -166,12 +208,13 @@
                         <input
                             type="text"
                             id="START_DATE"
-                            value="1st January 2025"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
                     </div>
 
+
+                    <!-- End Date -->
 
                     <div class="flex flex-col justify-end">
 
@@ -182,12 +225,13 @@
                         <input
                             type="text"
                             id="END_DATE"
-                            value="31st December 2026"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
                     </div>
 
+
+                    <!-- Renewal -->
 
                     <div class="flex flex-col justify-end">
 
@@ -198,12 +242,13 @@
                         <input
                             type="text"
                             id="RENEW"
-                            value="ONE"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
                     </div>
 
+
+                    <!-- Renewal Number -->
 
                     <div class="flex flex-col justify-end">
 
@@ -214,7 +259,6 @@
                         <input
                             type="text"
                             id="RENEW_YEAR"
-                            value="1"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
@@ -222,6 +266,8 @@
 
                 </div>
 
+
+                <!-- Bank Details -->
 
                 <div>
 
@@ -232,7 +278,6 @@
                     <input
                         type="text"
                         id="BANK_DETAIL"
-                        value="MAYBANK 1234567890 (AYUB EWAN)"
                         class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                     >
 
@@ -241,8 +286,13 @@
             </div>
 
 
-            <!-- Landlord Particulars -->
+
+            <!-- =========================================
+                 LANDLORD PARTICULARS
+            ========================================== -->
+
             <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
 
                 <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
 
@@ -257,6 +307,9 @@
 
                 <div class="grid grid-cols-2 gap-3">
 
+
+                    <!-- Landlord Name -->
+
                     <div class="flex flex-col justify-end">
 
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
@@ -266,12 +319,13 @@
                         <input
                             type="text"
                             id="LANDLORD_NAME"
-                            value="AYUB EWAN BIN MOHD FADZLY"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
                     </div>
 
+
+                    <!-- Landlord NRIC -->
 
                     <div class="flex flex-col justify-end">
 
@@ -282,7 +336,6 @@
                         <input
                             type="text"
                             id="LANDLORD_IC"
-                            value="870707-15-5049"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
@@ -290,6 +343,8 @@
 
                 </div>
 
+
+                <!-- Landlord Phone -->
 
                 <div>
 
@@ -300,12 +355,13 @@
                     <input
                         type="text"
                         id="LANDLORD_PHONE"
-                        value="016-84444877"
                         class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                     >
 
                 </div>
 
+
+                <!-- Landlord Address -->
 
                 <div>
 
@@ -317,15 +373,20 @@
                         id="LANDLORD_ADDRESS"
                         rows="2"
                         class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
-                    >NO.106, THE LAKE RESIDENCE, JALAN PUTRA PERDANA 16, TAMAN PUTRA PERDANA, 47100 PUCHONG, SELANGOR</textarea>
+                    ></textarea>
 
                 </div>
 
             </div>
 
 
-            <!-- Tenant Particulars -->
+
+            <!-- =========================================
+                 TENANT PARTICULARS
+            ========================================== -->
+
             <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
 
                 <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
 
@@ -340,6 +401,9 @@
 
                 <div class="grid grid-cols-2 gap-3">
 
+
+                    <!-- Tenant Name -->
+
                     <div class="flex flex-col justify-end">
 
                         <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
@@ -349,12 +413,13 @@
                         <input
                             type="text"
                             id="TENANT_NAME"
-                            value="ZHARIF FAHMI BIN SHAHIDAN"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
                     </div>
 
+
+                    <!-- Tenant NRIC -->
 
                     <div class="flex flex-col justify-end">
 
@@ -365,7 +430,6 @@
                         <input
                             type="text"
                             id="TENANT_IC"
-                            value="980717-06-5319"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
@@ -373,6 +437,8 @@
 
                 </div>
 
+
+                <!-- Tenant Phone -->
 
                 <div>
 
@@ -383,12 +449,13 @@
                     <input
                         type="text"
                         id="TENANT_PHONE"
-                        value="0111-1987782"
                         class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                     >
 
                 </div>
 
+
+                <!-- Tenant Address -->
 
                 <div>
 
@@ -400,15 +467,20 @@
                         id="TENANT_ADDRESS"
                         rows="2"
                         class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
-                    >A-4-2, PPAM KETUMBAR, PRESINT 17, 62150 W.P. PUTRAJAYA</textarea>
+                    ></textarea>
 
                 </div>
 
             </div>
 
 
-            <!-- Property & Financials -->
+
+            <!-- =========================================
+                 PROPERTY & FINANCIAL TERMS
+            ========================================== -->
+
             <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
 
                 <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
 
@@ -421,6 +493,8 @@
                 </div>
 
 
+                <!-- Property Address -->
+
                 <div>
 
                     <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
@@ -431,13 +505,18 @@
                         id="PROPERTY_ADDRESS"
                         rows="2"
                         class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
-                    >13-4-2, KEKWA APARTMENT, JALAN PUTRA PERDANA 5B, TAMAN PUTRA PERDANA, 47100 PUCHONG, SELANGOR</textarea>
+                    ></textarea>
 
                 </div>
 
 
-                <!-- Structured Financial Grid -->
+
+                <!-- Financial Grid -->
+
                 <div class="grid grid-cols-2 gap-3">
+
+
+                    <!-- Rental Words -->
 
                     <div class="flex flex-col justify-end">
 
@@ -448,12 +527,13 @@
                         <input
                             type="text"
                             id="RENTAL_AMOUNT"
-                            value="EIGHT HUNDRED"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
                     </div>
 
+
+                    <!-- Deposit Words -->
 
                     <div class="flex flex-col justify-end">
 
@@ -464,12 +544,13 @@
                         <input
                             type="text"
                             id="DEPOSIT_AMOUNT"
-                            value="ONE THOUSAND SIX HUNDRED"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
                         >
 
                     </div>
 
+
+                    <!-- Rental Number -->
 
                     <div class="flex flex-col justify-end">
 
@@ -480,6 +561,509 @@
                         <input
                             type="text"
                             id="RENTAL_NUMBER"
-                            value="800.00"
                             class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
-                 
+                        >
+
+                    </div>
+
+
+                    <!-- Deposit Number -->
+
+                    <div class="flex flex-col justify-end">
+
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Sec Deposit Num ([DEPOSIT_NUMBER])
+                        </label>
+
+                        <input
+                            type="text"
+                            id="DEPOSIT_NUMBER"
+                            class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
+                        >
+
+                    </div>
+
+
+                    <!-- Utility Deposit Words -->
+
+                    <div class="flex flex-col justify-end">
+
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Util Deposit Words ([UTILITY_DEPOSIT])
+                        </label>
+
+                        <input
+                            type="text"
+                            id="UTILITY_DEPOSIT"
+                            class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
+                        >
+
+                    </div>
+
+
+                    <!-- Utility Number -->
+
+                    <div class="flex flex-col justify-end">
+
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Util Deposit Num ([UTILITY_NUMBER])
+                        </label>
+
+                        <input
+                            type="text"
+                            id="UTILITY_NUMBER"
+                            class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 GENERATE BUTTON
+            ========================================== -->
+
+            <button
+                type="button"
+                onclick="generateDoc()"
+                class="w-full bg-[#f5b748] hover:bg-amber-400 text-black font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-amber-500/10 transition active:scale-[0.99]"
+            >
+                Generate Agreement (.docx)
+            </button>
+
+
+        </form>
+
+    </main>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script>
+
+
+        /* =========================================
+           THEME
+        ========================================== */
+
+        function toggleTheme() {
+
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+
+
+            if (html.classList.contains('dark')) {
+
+                html.classList.remove('dark');
+
+                icon.innerText = '☀️ Light';
+
+                localStorage.setItem('theme', 'light');
+
+            }
+
+            else {
+
+                html.classList.add('dark');
+
+                icon.innerText = '🌙 Dark';
+
+                localStorage.setItem('theme', 'dark');
+
+            }
+
+        }
+
+
+
+        /* =========================================
+           INITIAL THEME
+        ========================================== */
+
+        if (
+            localStorage.getItem('theme') === 'dark' ||
+            (
+                !('theme' in localStorage) &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches
+            )
+        ) {
+
+            document.documentElement.classList.add('dark');
+
+            document.getElementById('theme-icon').innerText = '🌙 Dark';
+
+        }
+
+        else {
+
+            document.documentElement.classList.remove('dark');
+
+            document.getElementById('theme-icon').innerText = '☀️ Light';
+
+        }
+
+
+
+        /* =========================================
+           DOCUMENT GENERATOR
+        ========================================== */
+
+        async function generateDoc() {
+
+            const fileInput = document.getElementById('docx-input');
+
+
+            if (!fileInput.files[0]) {
+
+                alert('Please upload your .docx master document first.');
+
+                return;
+
+            }
+
+
+            const replacements = {
+
+                "DURATION":
+                    document.getElementById('DURATION').value,
+
+                "DURATION_YEAR":
+                    document.getElementById('DURATION_YEAR').value,
+
+                "START_DATE":
+                    document.getElementById('START_DATE').value,
+
+                "END_DATE":
+                    document.getElementById('END_DATE').value,
+
+                "RENEW":
+                    document.getElementById('RENEW').value,
+
+                "RENEW_YEAR":
+                    document.getElementById('RENEW_YEAR').value,
+
+                "BANK_DETAIL":
+                    document.getElementById('BANK_DETAIL').value,
+
+                "LANDLORD_NAME":
+                    document.getElementById('LANDLORD_NAME').value,
+
+                "LANDLORD_IC":
+                    document.getElementById('LANDLORD_IC').value,
+
+                "LANDLORD_PHONE":
+                    document.getElementById('LANDLORD_PHONE').value,
+
+                "LANDLORD_ADDRESS":
+                    document.getElementById('LANDLORD_ADDRESS').value,
+
+                "TENANT_NAME":
+                    document.getElementById('TENANT_NAME').value,
+
+                "TENANT_IC":
+                    document.getElementById('TENANT_IC').value,
+
+                "TENANT_PHONE":
+                    document.getElementById('TENANT_PHONE').value,
+
+                "TENANT_ADDRESS":
+                    document.getElementById('TENANT_ADDRESS').value,
+
+                "PROPERTY_ADDRESS":
+                    document.getElementById('PROPERTY_ADDRESS').value,
+
+                "RENTAL_AMOUNT":
+                    document.getElementById('RENTAL_AMOUNT').value,
+
+                "RENTAL_NUMBER":
+                    document.getElementById('RENTAL_NUMBER').value,
+
+                "DEPOSIT_AMOUNT":
+                    document.getElementById('DEPOSIT_AMOUNT').value,
+
+                "DEPOSIT_NUMBER":
+                    document.getElementById('DEPOSIT_NUMBER').value,
+
+                "UTILITY_DEPOSIT":
+                    document.getElementById('UTILITY_DEPOSIT').value,
+
+                "UTILITY_NUMBER":
+                    document.getElementById('UTILITY_NUMBER').value
+
+            };
+
+
+            try {
+
+
+                /* =========================================
+                   LOAD DOCX
+                ========================================== */
+
+                const zip =
+                    await JSZip.loadAsync(fileInput.files[0]);
+
+
+                const xmlFiles =
+                    Object.keys(zip.files).filter(
+                        fileName =>
+                            fileName.startsWith('word/') &&
+                            fileName.endsWith('.xml')
+                    );
+
+
+                /* =========================================
+                   PROCESS WORD XML
+                ========================================== */
+
+                for (const fileName of xmlFiles) {
+
+                    const xmlFile = zip.file(fileName);
+
+
+                    if (xmlFile) {
+
+                        let content =
+                            await xmlFile.async("string");
+
+
+                        /*
+                         * Normalize placeholder formatting
+                         */
+
+                        content = content.replace(
+                            /(<w:t[^>]*>)([\s\S]*?)(<\/w:t>)/g,
+                            (match, openTag, text, closeTag) => {
+                                return openTag + text + closeTag;
+                            }
+                        );
+
+
+                        /*
+                         * Normalize placeholders
+                         */
+
+                        content = content.replace(
+                            /\[\s*(?:<[^>]+>)*\s*([A-Z0-9_]+)\s*(?:<[^>]+>)*\s*\]/g,
+                            '[$1]'
+                        );
+
+
+                        /*
+                         * Repair placeholders split
+                         * across Word XML runs
+                         */
+
+                        for (
+                            const key of Object.keys(replacements)
+                        ) {
+
+                            const brokenRegex =
+                                new RegExp(
+                                    '\\[\\s*' +
+                                    key
+                                        .split('')
+                                        .join('(?:<[^>]+>)*') +
+                                    '\\s*\\]',
+                                    'g'
+                                );
+
+
+                            content =
+                                content.replace(
+                                    brokenRegex,
+                                    `[${key}]`
+                                );
+
+                        }
+
+
+                        /*
+                         * Replace placeholders
+                         * with form values
+                         */
+
+                        for (
+                            const [key, value]
+                            of Object.entries(replacements)
+                        ) {
+
+                            const safeValue =
+                                String(value)
+
+                                    .replace(
+                                        /&/g,
+                                        '&amp;'
+                                    )
+
+                                    .replace(
+                                        /</g,
+                                        '&lt;'
+                                    )
+
+                                    .replace(
+                                        />/g,
+                                        '&gt;'
+                                    )
+
+                                    .replace(
+                                        /"/g,
+                                        '&quot;'
+                                    )
+
+                                    .replace(
+                                        /'/g,
+                                        '&apos;'
+                                    );
+
+
+                            const targetKey =
+                                `[${key}]`;
+
+
+                            content =
+                                content
+                                    .split(targetKey)
+                                    .join(safeValue);
+
+                        }
+
+
+                        zip.file(
+                            fileName,
+                            content
+                        );
+
+                    }
+
+                }
+
+
+                /* =========================================
+                   GENERATE DOCX
+                ========================================== */
+
+                const blob =
+                    await zip.generateAsync({
+
+                        type: "blob",
+
+                        mimeType:
+                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+                    });
+
+
+                /* =========================================
+                   FILE NAME
+                ========================================== */
+
+                const tenantName =
+                    replacements["TENANT_NAME"]
+                        .replace(
+                            /[^a-z0-9]/gi,
+                            '_'
+                        );
+
+
+                const fileName =
+                    `Tenancy_Agreement_${tenantName || 'Generated'}.docx`;
+
+
+                /* =========================================
+                   DOWNLOAD
+                ========================================== */
+
+                const link =
+                    document.createElement('a');
+
+
+                link.href =
+                    URL.createObjectURL(blob);
+
+
+                link.download =
+                    fileName;
+
+
+                document.body.appendChild(link);
+
+
+                link.click();
+
+
+                document.body.removeChild(link);
+
+
+                URL.revokeObjectURL(
+                    link.href
+                );
+
+
+            }
+
+
+            catch (err) {
+
+                alert(
+                    "Error processing document: " +
+                    err.message
+                );
+
+            }
+
+        }
+
+
+
+        /* =========================================
+           PWA SERVICE WORKER
+        ========================================== */
+
+        if ('serviceWorker' in navigator) {
+
+            window.addEventListener(
+                'load',
+                () => {
+
+                    navigator.serviceWorker
+                        .register('./sw.js')
+
+                        .then(
+                            (registration) => {
+
+                                console.log(
+                                    'AE Tenancy Portal service worker registered:',
+                                    registration.scope
+                                );
+
+                            }
+                        )
+
+                        .catch(
+                            (error) => {
+
+                                console.error(
+                                    'AE Tenancy Portal service worker registration failed:',
+                                    error
+                                );
+
+                            }
+                        );
+
+                }
+            );
+
+        }
+
+    </script>
+
+</body>
+</html>
