@@ -1,10 +1,11 @@
-const CACHE_NAME = 'ae-tenancy-portal-v1';
+const CACHE_NAME = 'ae-tenancy-portal-v2';
 
 const APP_FILES = [
     './',
     './index.html',
     './manifest.json',
-    './logo.png'
+    './logo.png',
+    './master-tenancy.docx'
 ];
 
 self.addEventListener('install', event => {
