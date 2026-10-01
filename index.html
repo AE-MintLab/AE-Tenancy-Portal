@@ -1,422 +1,871 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AE Property Management & Tenancy Portal</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1a365d">
-  <style>
-    :root {
-      --primary: #1a365d;
-      --accent: #2b6cb0;
-      --bg: #f7fafc;
-      --card-bg: #ffffff;
-      --text: #2d3748;
-      --border: #e2e8f0;
-      --success: #38a169;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AE Tenancy Portal</title>
 
-    * { box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 0;
-    }
+    <!-- Web App & Home Screen Icons -->
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
 
-    /* Top Navigation Bar */
-    .navbar {
-      background: var(--primary);
-      color: white;
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .navbar h1 { margin: 0; font-size: 1.25rem; }
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f5b748">
 
-    /* Navigation Tabs */
-    .nav-tabs {
-      display: flex;
-      background: #edf2f7;
-      border-bottom: 1px solid var(--border);
-      padding: 0 24px;
-    }
-    .tab-btn {
-      padding: 12px 20px;
-      border: none;
-      background: none;
-      font-weight: 600;
-      color: #718096;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-    }
-    .tab-btn.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
-      background: white;
-    }
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    /* Main Container */
-    .container {
-      max-width: 1200px;
-      margin: 24px auto;
-      padding: 0 16px;
-    }
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
 
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    /* Property Dashboard Grid */
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
+        /* Custom Install Banner */
+        #install-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: #f5b748;
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        }
 
-    .property-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 20px;
-    }
+        #install-banner-inner {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .property-card {
-      background: var(--card-bg);
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      border: 1px solid var(--border);
-      border-top: 4px solid var(--accent);
-      padding: 20px;
-    }
+        #install-banner-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
 
-    .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 700;
-    }
-    .badge-financed { background: #ebf8ff; color: #2b6cb0; }
-    .badge-paid { background: #f0fff4; color: #2f855a; }
+        #install-banner-text {
+            flex: 1;
+            min-width: 0;
+        }
 
-    .section-title {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #718096;
-      margin-top: 14px;
-      margin-bottom: 6px;
-      border-bottom: 1px dashed var(--border);
-      padding-bottom: 4px;
-    }
+        #install-banner-title {
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
 
-    .info-group { font-size: 0.875rem; line-height: 1.5; }
+        #install-banner-message {
+            font-size: 9px;
+            line-height: 1.4;
+            opacity: 0.75;
+            margin-top: 2px;
+        }
 
-    .utility-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      font-size: 0.85rem;
-    }
+        #install-action {
+            font-size: 10px;
+            font-weight: 700;
+            text-decoration: underline;
+            cursor: pointer;
+            white-space: nowrap;
+            padding: 4px;
+        }
 
-    /* Form & Buttons */
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-secondary {
-      background: #e2e8f0;
-      color: var(--text);
-      border: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+        #install-close {
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 3px 5px;
+            opacity: 0.65;
+            background: none;
+            border: none;
+        }
 
-    /* Modal Styling */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-      z-index: 100;
-    }
-    .modal-content {
-      background: white;
-      border-radius: 8px;
-      max-width: 600px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 24px;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .form-group { display: flex; flex-direction: column; margin-bottom: 12px; }
-    .form-group.full { grid-column: span 2; }
-    .form-group label { font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; }
-    .form-group input, .form-group select {
-      padding: 8px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-    }
-  </style>
+        #install-close:hover {
+            opacity: 1;
+        }
+
+        .tab-btn.active {
+            background-color: #f5b748;
+            color: #000;
+            font-weight: 700;
+        }
+    </style>
 </head>
-<body>
 
-  <div class="navbar">
-    <h1>AE Property Management System</h1>
-  </div>
+<body class="bg-slate-50 dark:bg-[#121316] text-slate-800 dark:text-slate-100 min-h-screen pb-12 transition-colors duration-200">
 
-  <!-- Navigation Tabs -->
-  <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('dashboard')">Property Dashboard</button>
-    <button class="tab-btn" onclick="switchTab('tenancy')">Tenancy Generator</button>
-  </div>
+    <!-- Custom Install Banner -->
+    <div id="install-banner">
+        <div id="install-banner-inner">
+            <div id="install-banner-icon">📱</div>
 
-  <div class="container">
-    
-    <!-- TAB 1: PROPERTY DASHBOARD -->
-    <div id="tab-dashboard" class="tab-content active">
-      <div class="dashboard-header">
-        <div>
-          <h2 style="margin: 0;">Properties Under Management</h2>
-          <span style="font-size: 0.875rem; color: #718096;">Asset Details, Loans, Management & Utilities</span>
-        </div>
-        <button class="btn-primary" onclick="openModal()">+ Add Property</button>
-      </div>
+            <div id="install-banner-text">
+                <div id="install-banner-title">
+                    Install AE Tenancy Portal
+                </div>
 
-      <div id="propertyGrid" class="property-grid">
-        <!-- Rendered dynamically -->
-      </div>
-    </div>
+                <div id="install-banner-message">
+                    Add it to your home screen for quick access.
+                </div>
+            </div>
 
-    <!-- TAB 2: TENANCY AGREEMENT GENERATOR -->
-    <div id="tab-tenancy" class="tab-content">
-      <h2>Tenancy Agreement Generator</h2>
-      <p style="color: #718096;">Input agreement terms to generate the PDF contract.</p>
-      
-      <div style="background: white; padding: 24px; border-radius: 8px; border: 1px solid var(--border);">
-        <p><em>(Your existing PDF agreement form connects here)</em></p>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- MODAL: ADD PROPERTY -->
-  <div id="propertyModal" class="modal">
-    <div class="modal-content">
-      <h3 style="margin-top: 0;">Add New Property Details</h3>
-      <form id="propertyForm" onsubmit="saveProperty(event)">
-        <div class="form-grid">
-          
-          <div class="form-group full">
-            <label>Property Name / Reference</label>
-            <input type="text" id="propName" placeholder="e.g. Cyberjaya Vista Unit A-12-3" required>
-          </div>
-
-          <div class="form-group full">
-            <label>Full Address</label>
-            <input type="text" id="propAddress" required>
-          </div>
-
-          <div class="form-group">
-            <label>Owner Name</label>
-            <input type="text" id="ownerName" required>
-          </div>
-
-          <div class="form-group">
-            <label>Financing Status</label>
-            <select id="loanStatus">
-              <option value="Financed">Financed</option>
-              <option value="Paid Off">Paid Off</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Bank Name</label>
-            <input type="text" id="bankName" placeholder="e.g. Maybank">
-          </div>
-
-          <div class="form-group">
-            <label>Monthly Installment (RM)</label>
-            <input type="number" id="installment" placeholder="1650">
-          </div>
-
-          <div class="form-group">
-            <label>JMB / Management Name</label>
-            <input type="text" id="jmbName" placeholder="e.g. Vista Mgmt Office">
-          </div>
-
-          <div class="form-group">
-            <label>JMB Contact Number</label>
-            <input type="text" id="jmbPhone" placeholder="+60 12-345 6789">
-          </div>
-
-          <div class="form-group">
-            <label>Maintenance Fee (RM/mo)</label>
-            <input type="number" id="maintFee" placeholder="280">
-          </div>
-
-          <div class="form-group">
-            <label>TNB Acc No. (Electricity)</label>
-            <input type="text" id="tnbAcc">
-          </div>
-
-          <div class="form-group">
-            <label>Water Acc No. (Air Selangor/Local)</label>
-            <input type="text" id="waterAcc">
-          </div>
-
-          <div class="form-group">
-            <label>IWK Acc No. (Sewerage)</label>
-            <input type="text" id="iwkAcc">
-          </div>
-
-          <div class="form-group full">
-            <label>Cukai Taksiran (Council Account)</label>
-            <input type="text" id="cukaiAcc" placeholder="e.g. MPSepang - 99201">
-          </div>
-
-        </div>
-
-        <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px;">
-          <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
-          <button type="submit" class="btn-primary">Save Property</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <script src="sw.js"></script>
-  <script>
-    // Tab Switcher
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      
-      document.getElementById('tab-' + tabId).classList.add('active');
-      event.target.classList.add('active');
-    }
-
-    // Modal Control
-    function openModal() { document.getElementById('propertyModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('propertyModal').style.display = 'none'; }
-
-    // Initial Data State (Saved in LocalStorage)
-    let properties = JSON.parse(localStorage.getItem("ae_properties")) || [
-      {
-        id: "prop_1",
-        name: "Cyberjaya Vista Unit A-12-3",
-        address: "Block A, Vista Suites, Cyberjaya",
-        owner: "Adam Hafiz",
-        financing: { status: "Financed", bank: "Maybank", installment: "1650" },
-        jmb: { name: "Vista Mgmt Office", phone: "+60 12-345 6789", fee: "280" },
-        utilities: {
-          tnb: "2201928381",
-          water: "10029384",
-          iwk: "8839201",
-          cukai: "MPSepang-992"
-        }
-      }
-    ];
-
-    function renderProperties() {
-      const container = document.getElementById("propertyGrid");
-      if (properties.length === 0) {
-        container.innerHTML = `<p style="grid-column: 1/-1;">No properties added yet. Click "+ Add Property" to begin.</p>`;
-        return;
-      }
-
-      container.innerHTML = properties.map(p => `
-        <div class="property-card">
-          <div style="display: flex; justify-content: space-between; align-items: start;">
-            <h3 style="margin: 0; font-size: 1.1rem;">${p.name}</h3>
-            <span class="badge ${p.financing.status === 'Financed' ? 'badge-financed' : 'badge-paid'}">
-              ${p.financing.status}
+            <span id="install-action" onclick="installPortal()">
+                Install
             </span>
-          </div>
-          <p style="font-size: 0.85rem; color: #718096; margin: 4px 0 12px 0;">${p.address}</p>
 
-          <div class="section-title">Financing & Owner</div>
-          <div class="info-group">
-            <div><strong>Owner:</strong> ${p.owner}</div>
-            <div><strong>Bank:</strong> ${p.financing.bank || 'N/A'} (RM ${p.financing.installment || '0'}/mo)</div>
-          </div>
-
-          <div class="section-title">JMB / Building Mgmt</div>
-          <div class="info-group">
-            <div><strong>Office:</strong> ${p.jmb.name || 'N/A'}</div>
-            <div><strong>Phone:</strong> ${p.jmb.phone || 'N/A'}</div>
-            <div><strong>Maintenance:</strong> RM ${p.jmb.fee || '0'}/mo</div>
-          </div>
-
-          <div class="section-title">Utility Accounts</div>
-          <div class="utility-grid">
-            <div>⚡ <strong>TNB:</strong> ${p.utilities.tnb || '-'}</div>
-            <div>💧 <strong>Water:</strong> ${p.utilities.water || '-'}</div>
-            <div>🚽 <strong>IWK:</strong> ${p.utilities.iwk || '-'}</div>
-            <div>🏛️ <strong>Taksiran:</strong> ${p.utilities.cukai || '-'}</div>
-          </div>
-
-          <div style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 12px;">
-            <button class="btn-primary" style="width: 100%; font-size: 0.85rem;" onclick="switchTab('tenancy')">
-              📄 Generate Agreement
+            <button id="install-close" onclick="closeInstallBanner()" aria-label="Close">
+                ×
             </button>
-          </div>
         </div>
-      `).join('');
-    }
+    </div>
 
-    function saveProperty(e) {
-      e.preventDefault();
-      const newProp = {
-        id: "prop_" + Date.now(),
-        name: document.getElementById('propName').value,
-        address: document.getElementById('propAddress').value,
-        owner: document.getElementById('ownerName').value,
-        financing: {
-          status: document.getElementById('loanStatus').value,
-          bank: document.getElementById('bankName').value,
-          installment: document.getElementById('installment').value
-        },
-        jmb: {
-          name: document.getElementById('jmbName').value,
-          phone: document.getElementById('jmbPhone').value,
-          fee: document.getElementById('maintFee').value
-        },
-        utilities: {
-          tnb: document.getElementById('tnbAcc').value,
-          water: document.getElementById('waterAcc').value,
-          iwk: document.getElementById('iwkAcc').value,
-          cukai: document.getElementById('cukaiAcc').value
+    <!-- Header / Brand Banner -->
+    <header class="bg-white dark:bg-[#1a1c23] border-b border-slate-200 dark:border-amber-500/20 sticky top-0 z-50 backdrop-blur-md transition-colors duration-200">
+        <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between">
+
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-[#f5b748] flex items-center justify-center overflow-hidden border border-amber-500/20 shadow-md shrink-0">
+                    <img src="logo.png" alt="AE Logo" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="hidden text-black font-bold text-sm">AE</span>
+                </div>
+
+                <div>
+                    <h1 class="text-base font-bold text-slate-900 dark:text-slate-100 tracking-wide leading-tight">
+                        AE PROPERTY PORTAL
+                    </h1>
+
+                    <p class="text-[10px] text-amber-600 dark:text-amber-400/80 font-semibold">
+                        Property & Tenancy Management
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-amber-400 hover:opacity-80 transition">
+                    <span id="theme-icon" class="text-xs font-bold uppercase tracking-wider">🌙 Dark</span>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="max-w-xl mx-auto p-4 space-y-5">
+
+        <!-- Navigation Tabs -->
+        <div class="flex bg-slate-200 dark:bg-slate-800/80 p-1 rounded-xl gap-1">
+            <button id="btn-tab-generator" onclick="switchMainTab('generator')" class="tab-btn active flex-1 py-2 rounded-lg text-xs font-semibold transition text-slate-600 dark:text-slate-300">
+                📄 Tenancy Generator
+            </button>
+            <button id="btn-tab-dashboard" onclick="switchMainTab('dashboard')" class="tab-btn flex-1 py-2 rounded-lg text-xs font-semibold transition text-slate-600 dark:text-slate-300">
+                🏢 Property Dashboard
+            </button>
+        </div>
+
+        <!-- ================= TAB 1: TENANCY GENERATOR ================= -->
+        <div id="tab-generator" class="space-y-5">
+
+            <!-- File Upload Section -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-amber-500/20 rounded-2xl p-5 shadow-sm dark:shadow-xl transition-colors duration-200">
+                <div class="mb-2">
+                    <label class="block text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+                        Master Document
+                    </label>
+                    <p class="text-[9px] text-slate-400 dark:text-slate-500 mt-1">
+                        ✓ Saved master document is automatically used
+                    </p>
+                </div>
+
+                <div class="relative border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-amber-500/50 transition rounded-xl p-4 text-center bg-slate-50 dark:bg-[#121316]/50">
+                    <input
+                        type="file"
+                        id="docx-input"
+                        accept=".docx"
+                        class="block w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#f5b748] file:text-black hover:file:bg-amber-400 file:transition cursor-pointer"
+                    />
+                </div>
+            </div>
+
+            <form onsubmit="return false;" class="space-y-5">
+
+                <!-- Landlord Particulars -->
+                <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+                    <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                        <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                            Landlord Particulars
+                        </h2>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex flex-col justify-end">
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Full Name</label>
+                            <input type="text" id="LANDLORD_NAME" placeholder="e.g. AHMAD BIN ALI" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+
+                        <div class="flex flex-col justify-end">
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">NRIC</label>
+                            <input type="text" id="LANDLORD_IC" placeholder="e.g. 800101-01-1234" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Phone Number</label>
+                        <input type="text" id="LANDLORD_PHONE" placeholder="e.g. 012-3456789" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Address</label>
+                        <textarea id="LANDLORD_ADDRESS" rows="2" placeholder="e.g. NO. 10, JALAN ABC, 43000 KAJANG, SELANGOR" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- Tenant Particulars -->
+                <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+                    <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                        <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                            Tenant Particulars
+                        </h2>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex flex-col justify-end">
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Full Name</label>
+                            <input type="text" id="TENANT_NAME" placeholder="e.g. MUHAMMAD ALI BIN AHMAD" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+
+                        <div class="flex flex-col justify-end">
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">NRIC</label>
+                            <input type="text" id="TENANT_IC" placeholder="e.g. 900101-01-1234" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Phone Number</label>
+                        <input type="text" id="TENANT_PHONE" placeholder="e.g. 012-9876543" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Address</label>
+                        <textarea id="TENANT_ADDRESS" rows="2" placeholder="e.g. NO. 20, JALAN XYZ, 40150 SHAH ALAM, SELANGOR" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- Property & Financials -->
+                <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+                    <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                        <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                            Property & Financial Terms
+                        </h2>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Property Address</label>
+                        <textarea id="PROPERTY_ADDRESS" rows="2" placeholder="e.g. UNIT 10-05, ABC RESIDENCES, JALAN ABC, 43000 KAJANG, SELANGOR" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Rental Amount (Text)</label>
+                            <input type="text" id="RENTAL_AMOUNT" placeholder="e.g. THREE THOUSAND" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Rental Amount (RM)</label>
+                            <input type="text" id="RENTAL_NUMBER" placeholder="e.g. 3000" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Security Deposit (Text)</label>
+                            <input type="text" id="DEPOSIT_AMOUNT" placeholder="e.g. SIX THOUSAND" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Security Deposit (RM)</label>
+                            <input type="text" id="DEPOSIT_NUMBER" placeholder="e.g. 6000" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Utility Deposit (Text)</label>
+                            <input type="text" id="UTILITY_DEPOSIT" placeholder="e.g. THREE HUNDRED" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Utility Deposit (RM)</label>
+                            <input type="text" id="UTILITY_NUMBER" placeholder="e.g. 300" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tenancy Details -->
+                <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+                    <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                        <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                            Tenancy Period & Banking
+                        </h2>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex flex-col justify-end">
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Tenancy Duration (Text)</label>
+                            <input type="text" id="DURATION" placeholder="e.g. TWO" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div class="flex flex-col justify-end">
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Tenancy Duration (Years)</label>
+                            <input type="text" id="DURATION_YEAR" placeholder="e.g. 2" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div class="flex flex-col justify-end">
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Start Date</label>
+                            <input type="text" id="START_DATE" placeholder="e.g. 1 JANUARY 2027" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div class="flex flex-col justify-end">
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">End Date</label>
+                            <input type="text" id="END_DATE" placeholder="e.g. 31 DECEMBER 2028" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div class="flex flex-col justify-end">
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Renewal Period (Text)</label>
+                            <input type="text" id="RENEW" placeholder="e.g. ONE" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div class="flex flex-col justify-end">
+                            <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Renewal Period (Years)</label>
+                            <input type="text" id="RENEW_YEAR" placeholder="e.g. 1" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Bank Payment Details</label>
+                        <input type="text" id="BANK_DETAIL" placeholder="e.g. MAYBANK - 1234567890" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <button onclick="generateDoc()" class="w-full bg-[#f5b748] hover:bg-amber-400 text-black font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-amber-500/10 transition active:scale-[0.99]">
+                    Generate Agreement (.docx)
+                </button>
+
+            </form>
+        </div>
+
+        <!-- ================= TAB 2: PROPERTY DASHBOARD ================= -->
+        <div id="tab-dashboard" class="hidden space-y-5">
+
+            <!-- Add New Property Card -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-amber-500/20 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                            Add Managed Property
+                        </h2>
+                    </div>
+                </div>
+
+                <form id="prop-form" onsubmit="saveProperty(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Property Name / Unit</label>
+                        <input type="text" id="p_name" placeholder="e.g. Cyberjaya Vista Unit A-12-3" required oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">Owner Name</label>
+                        <input type="text" id="p_owner" placeholder="e.g. ADAM HAFIZ" required oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <!-- Financing Section -->
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
+                        <span class="block text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2">Loan & Financing</span>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-[9px] text-slate-500 dark:text-slate-400 mb-1">Status</label>
+                                <select id="p_loan_status" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 focus:border-amber-500 focus:outline-none">
+                                    <option value="FINANCED">FINANCED</option>
+                                    <option value="PAID OFF">PAID OFF</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-slate-500 dark:text-slate-400 mb-1">Bank Name</label>
+                                <input type="text" id="p_bank" placeholder="MAYBANK" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-slate-500 dark:text-slate-400 mb-1">Installment (RM)</label>
+                                <input type="text" id="p_installment" placeholder="1650" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Management Office / JMB -->
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
+                        <span class="block text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2">JMB / Building Management</span>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-[9px] text-slate-500 dark:text-slate-400 mb-1">JMB Name</label>
+                                <input type="text" id="p_jmb_name" placeholder="VISTA MGMT" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-slate-500 dark:text-slate-400 mb-1">Contact Phone</label>
+                                <input type="text" id="p_jmb_phone" placeholder="012-3456789" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-slate-500 dark:text-slate-400 mb-1">Maint Fee (RM)</label>
+                                <input type="text" id="p_maint_fee" placeholder="280" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Utilities Account Numbers -->
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
+                        <span class="block text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2">Utilities Accounts</span>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[9px] text-slate-500 dark:text-slate-400 mb-1">TNB (Electricity)</label>
+                                <input type="text" id="p_tnb" placeholder="2201928381" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-slate-500 dark:text-slate-400 mb-1">Water (Air Selangor)</label>
+                                <input type="text" id="p_water" placeholder="10029384" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-slate-500 dark:text-slate-400 mb-1">IWK (Sewerage)</label>
+                                <input type="text" id="p_iwk" placeholder="8839201" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-slate-500 dark:text-slate-400 mb-1">Cukai Taksiran</label>
+                                <input type="text" id="p_cukai" placeholder="MPSEPANG-992" oninput="this.value = this.value.toUpperCase()" class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#f5b748] hover:bg-amber-400 text-black font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition active:scale-[0.99]">
+                        + Save Property
+                    </button>
+                </form>
+            </div>
+
+            <!-- Property List Render -->
+            <div id="property-list-container" class="space-y-4">
+                <!-- Rendered dynamically via JavaScript -->
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+
+        /* =========================================================
+           TAB NAVIGATION SWITCHER
+        ========================================================= */
+
+        function switchMainTab(tab) {
+            const genTab = document.getElementById('tab-generator');
+            const dashTab = document.getElementById('tab-dashboard');
+            const btnGen = document.getElementById('btn-tab-generator');
+            const btnDash = document.getElementById('btn-tab-dashboard');
+
+            if (tab === 'generator') {
+                genTab.classList.remove('hidden');
+                dashTab.classList.add('hidden');
+                btnGen.classList.add('active');
+                btnDash.classList.remove('active');
+            } else {
+                genTab.classList.add('hidden');
+                dashTab.classList.remove('hidden');
+                btnDash.classList.add('active');
+                btnGen.classList.remove('active');
+                renderPropertyList();
+            }
         }
-      };
 
-      properties.push(newProp);
-      localStorage.setItem("ae_properties", JSON.stringify(properties));
-      renderProperties();
-      closeModal();
-      document.getElementById('propertyForm').reset();
-    }
 
-    // Initial load
-    renderProperties();
-  </script>
+        /* =========================================================
+           PROPERTY MANAGEMENT STATE (LOCALSTORAGE)
+        ========================================================= */
+
+        let savedProperties = JSON.parse(localStorage.getItem('ae_properties_data')) || [
+            {
+                id: 'p_1',
+                name: 'CYBERJAYA VISTA UNIT A-12-3',
+                owner: 'ADAM HAFIZ',
+                loanStatus: 'FINANCED',
+                bank: 'MAYBANK',
+                installment: '1650',
+                jmbName: 'VISTA MGMT OFFICE',
+                jmbPhone: '012-3456789',
+                maintFee: '280',
+                tnb: '2201928381',
+                water: '10029384',
+                iwk: '8839201',
+                cukai: 'MPSEPANG-992'
+            }
+        ];
+
+        function saveProperty(e) {
+            e.preventDefault();
+
+            const newProp = {
+                id: 'p_' + Date.now(),
+                name: document.getElementById('p_name').value,
+                owner: document.getElementById('p_owner').value,
+                loanStatus: document.getElementById('p_loan_status').value,
+                bank: document.getElementById('p_bank').value,
+                installment: document.getElementById('p_installment').value,
+                jmbName: document.getElementById('p_jmb_name').value,
+                jmbPhone: document.getElementById('p_jmb_phone').value,
+                maintFee: document.getElementById('p_maint_fee').value,
+                tnb: document.getElementById('p_tnb').value,
+                water: document.getElementById('p_water').value,
+                iwk: document.getElementById('p_iwk').value,
+                cukai: document.getElementById('p_cukai').value
+            };
+
+            savedProperties.push(newProp);
+            localStorage.setItem('ae_properties_data', JSON.stringify(savedProperties));
+            document.getElementById('prop-form').reset();
+            renderPropertyList();
+        }
+
+        function deleteProperty(id) {
+            if (confirm('Delete this property record?')) {
+                savedProperties = savedProperties.filter(p => p.id !== id);
+                localStorage.setItem('ae_properties_data', JSON.stringify(savedProperties));
+                renderPropertyList();
+            }
+        }
+
+        function autofillTenancy(owner, name) {
+            document.getElementById('LANDLORD_NAME').value = owner;
+            document.getElementById('PROPERTY_ADDRESS').value = name;
+            switchMainTab('generator');
+        }
+
+        function renderPropertyList() {
+            const container = document.getElementById('property-list-container');
+            if (savedProperties.length === 0) {
+                container.innerHTML = `<p class="text-xs text-center text-slate-400 py-4">No properties recorded yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = savedProperties.map(p => `
+                <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 space-y-3 shadow-sm dark:shadow-xl">
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100">${p.name}</h3>
+                            <p class="text-[10px] text-slate-400">Owner: ${p.owner}</p>
+                        </div>
+                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-md ${p.loanStatus === 'FINANCED' ? 'bg-amber-500/10 text-amber-500' : 'bg-green-500/10 text-green-500'}">
+                            ${p.loanStatus}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-[10px]">
+                        <div class="bg-slate-50 dark:bg-[#121316] p-2 rounded-lg">
+                            <span class="block text-slate-400 text-[9px]">LOAN / BANK</span>
+                            <span class="font-semibold text-slate-700 dark:text-slate-300">${p.bank || '-'} (RM ${p.installment || '0'}/mo)</span>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-[#121316] p-2 rounded-lg">
+                            <span class="block text-slate-400 text-[9px]">BUILDING MANAGEMENT</span>
+                            <span class="font-semibold text-slate-700 dark:text-slate-300">${p.jmbName || '-'} (${p.jmbPhone || '-'})</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-[9px] bg-slate-50 dark:bg-[#121316] p-2 rounded-lg border border-slate-100 dark:border-slate-800/50">
+                        <div>⚡ <strong>TNB:</strong> ${p.tnb || '-'}</div>
+                        <div>💧 <strong>Water:</strong> ${p.water || '-'}</div>
+                        <div>🚽 <strong>IWK:</strong> ${p.iwk || '-'}</div>
+                        <div>🏛️ <strong>Cukai:</strong> ${p.cukai || '-'}</div>
+                    </div>
+
+                    <div class="flex gap-2 pt-1">
+                        <button onclick="autofillTenancy('${p.owner}', '${p.name}')" class="flex-1 bg-[#f5b748] text-black font-bold py-1.5 rounded-lg text-[10px] uppercase tracking-wider">
+                            📄 Fill Agreement
+                        </button>
+                        <button onclick="deleteProperty('${p.id}')" class="px-3 bg-red-500/10 text-red-500 font-bold py-1.5 rounded-lg text-[10px] hover:bg-red-500/20">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+
+        /* =========================================================
+           THEME
+        ========================================================= */
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.innerText = '☀️ Light';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                icon.innerText = '🌙 Dark';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        if (
+            localStorage.getItem('theme') === 'dark' ||
+            (!('theme' in localStorage) &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-icon').innerText = '🌙 Dark';
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.getElementById('theme-icon').innerText = '☀️ Light';
+        }
+
+
+        /* =========================================================
+           DOCX GENERATOR
+           ORIGINAL PLACEHOLDER LOGIC — UNCHANGED
+        ========================================================= */
+
+        async function generateDoc() {
+            const fileInput = document.getElementById('docx-input');
+
+            let masterFile;
+
+            if (fileInput.files[0]) {
+                masterFile = fileInput.files[0];
+            } else {
+                try {
+                    const response = await fetch('./master-tenancy.docx');
+                    if (!response.ok) {
+                        throw new Error('Saved master document could not be loaded.');
+                    }
+                    masterFile = await response.blob();
+                } catch (error) {
+                    alert(
+                        'Unable to load the saved master document. ' +
+                        'Please check that master-tenancy.docx exists in the repository.'
+                    );
+                    return;
+                }
+            }
+
+            const replacements = {
+                "DURATION": document.getElementById('DURATION').value,
+                "DURATION_YEAR": document.getElementById('DURATION_YEAR').value,
+                "START_DATE": document.getElementById('START_DATE').value,
+                "END_DATE": document.getElementById('END_DATE').value,
+                "RENEW": document.getElementById('RENEW').value,
+                "RENEW_YEAR": document.getElementById('RENEW_YEAR').value,
+                "BANK_DETAIL": document.getElementById('BANK_DETAIL').value,
+                "LANDLORD_NAME": document.getElementById('LANDLORD_NAME').value,
+                "LANDLORD_IC": document.getElementById('LANDLORD_IC').value,
+                "LANDLORD_PHONE": document.getElementById('LANDLORD_PHONE').value,
+                "LANDLORD_ADDRESS": document.getElementById('LANDLORD_ADDRESS').value,
+                "TENANT_NAME": document.getElementById('TENANT_NAME').value,
+                "TENANT_IC": document.getElementById('TENANT_IC').value,
+                "TENANT_PHONE": document.getElementById('TENANT_PHONE').value,
+                "TENANT_ADDRESS": document.getElementById('TENANT_ADDRESS').value,
+                "PROPERTY_ADDRESS": document.getElementById('PROPERTY_ADDRESS').value,
+                "RENTAL_AMOUNT": document.getElementById('RENTAL_AMOUNT').value,
+                "RENTAL_NUMBER": document.getElementById('RENTAL_NUMBER').value,
+                "DEPOSIT_AMOUNT": document.getElementById('DEPOSIT_AMOUNT').value,
+                "DEPOSIT_NUMBER": document.getElementById('DEPOSIT_NUMBER').value,
+                "UTILITY_DEPOSIT": document.getElementById('UTILITY_DEPOSIT').value,
+                "UTILITY_NUMBER": document.getElementById('UTILITY_NUMBER').value,
+            };
+
+            try {
+                const zip = await JSZip.loadAsync(masterFile);
+
+                const xmlFiles = Object.keys(zip.files).filter(
+                    fileName =>
+                        fileName.startsWith('word/') &&
+                        fileName.endsWith('.xml')
+                );
+
+                for (const fileName of xmlFiles) {
+                    const xmlFile = zip.file(fileName);
+
+                    if (xmlFile) {
+                        let content = await xmlFile.async("string");
+
+                        content = content.replace(
+                            /(<w:t[^>]*>)([\s\S]*?)(<\/w:t>)/g,
+                            (match, openTag, text, closeTag) => {
+                                return openTag + text + closeTag;
+                            }
+                        );
+
+                        content = content.replace(
+                            /\[\s*(?:<[^>]+>)*\s*([A-Z0-9_]+)\s*(?:<[^>]+>)*\s*\]/g,
+                            '[$1]'
+                        );
+
+                        for (const key of Object.keys(replacements)) {
+                            const brokenRegex = new RegExp(
+                                '\\[\\s*' +                                 key.split('').join('(?:<[^>]+>)*') +                                 '\\s*\\]',
+                                'g'
+                            );
+
+                            content = content.replace(
+                                brokenRegex,
+                                `[${key}]`
+                            );
+                        }
+
+                        for (const [key, value] of Object.entries(replacements)) {
+
+                            const safeValue = String(value)
+                                .replace(/&/g, '&amp;')
+                                .replace(/</g, '&lt;')
+                                .replace(/>/g, '&gt;')
+                                .replace(/"/g, '&quot;')
+                                .replace(/'/g, '&apos;');
+
+                            const targetKey = `[${key}]`;
+
+                            content = content
+                                .split(targetKey)
+                                .join(safeValue);
+                        }
+
+                        zip.file(fileName, content);
+                    }
+                }
+
+                const blob = await zip.generateAsync({
+                    type: "blob",
+                    mimeType:
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                });
+
+                const tenantName =
+                    replacements["TENANT_NAME"]
+                        .replace(/[^a-z0-9]/gi, '_');
+
+                const fileName =
+                    `Tenancy_Agreement_${tenantName}.docx`;
+
+                const link = document.createElement('a');
+
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                URL.revokeObjectURL(link.href);
+
+            } catch (err) {
+                alert("Error processing document: " + err.message);
+            }
+        }
+
+
+        /* =========================================================
+           PWA SERVICE WORKER
+        ========================================================= */
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker
+                    .register('./sw.js')
+                    .then(registration => {
+                        console.log(
+                            'AE Tenancy Portal service worker registered:',
+                            registration.scope
+                        );
+                    })
+                    .catch(error => {
+                        console.error(
+                            'AE Tenancy Portal service worker registration failed:',
+                            error
+                        );
+                    });
+            });
+        }
+
+
+        /* =========================================================
+           CUSTOM INSTALL BANNER
+        ========================================================= */
+
+        let deferredInstallPrompt = null;
+        const installBanner = document.getElementById('install-banner');
+        const installAction = document.getElementById('install-action');
+        const installMessage = document.getElementById('install-banner-message');
+
+        function showInstallBanner() {
+            if (
+                window.matchMedia('(display-mode: standalone)').matches ||
+                window.navigator.standalone === true
+            ) {
+                return;
+            }
+            installBanner.style.display = 'block';
+        }
+
+        function closeInstallBanner() {
+            installBanner.style.display = 'none';
+        }
+
+        async function installPortal() {
+            if (!deferredInstallPrompt) {
+                installMessage.innerText =
+                    'Open Chrome ⋮ menu and choose "Install app" or "Add to Home screen".';
+                installAction.style.display = 'none';
+                return;
+            }
+
+            try {
+                deferredInstallPrompt.prompt();
+                const choice = await deferredInstallPrompt.userChoice;
+                deferredInstallPrompt = null;
+                if (choice.outcome === 'accepted') {
+                    closeInstallBanner();
+                }
+            } catch (error) {
+                console.log('AE Tenancy Portal install prompt error:', error);
+            }
+        }
+
+        window.addEventListener('beforeinstallprompt', event => {
+            event.preventDefault();
+            deferredInstallPrompt = event;
+            installAction.style.display = 'inline';
+            installMessage.innerText = 'Add it to your home screen for quick access.';
+            showInstallBanner();
+        });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (!deferredInstallPrompt) {
+                    if (
+                        !window.matchMedia('(display-mode: standalone)').matches &&
+                        window.navigator.standalone !== true
+                    ) {
+                        installMessage.innerText =
+                            'Open Chrome ⋮ menu and choose "Install app" or "Add to Home screen".';
+                        installAction.style.display = 'none';
+                        showInstallBanner();
+                    }
+                }
+            }, 2500);
+        });
+
+        window.addEventListener('appinstalled', () => {
+            deferredInstallPrompt = null;
+            closeInstallBanner();
+        });
+
+    </script>
+
 </body>
 </html>
