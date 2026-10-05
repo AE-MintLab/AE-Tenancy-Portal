@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<!-- Web App & Home Screen Icons -->
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="icon" type="image/png" href="logo.png">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f5b748">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+    }
+</script>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    input,
+    textarea,
+    select,
+    button {
+        font-family: inherit;
+        max-width: 100%;
+    }
+
+    /* Custom Install Banner */
+    #install-banner {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #f5b748;
+        color: #000;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    }
+
+    #install-banner-inner {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #install-banner-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    #install-banner-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    #install-banner-title {
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    #install-banner-message {
+        font-size: 9px;
+        line-height: 1.4;
+        opacity: 0.75;
+        margin-top: 2px;
+    }
+
+    #install-action {
+        font-size: 10px;
+        font-weight: 700;
+        text-decoration: underline;
+        cursor: pointer;
+        white-space: nowrap;
+        padding: 4px;
+    }
+
+    #install-close {
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 3px 5px;
+        opacity: 0.65;
+        background: none;
+        border: none;
+    }
+
+    #install-close:hover {
+        opacity: 1;
+    }
+
+    .tab-btn.active {
+        background-color: #f5b748;
+        color: #000;
+        font-weight: 700;
+    }
+
+    .dashboard-input {
+        width: 100%;
+        min-width: 0;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 12px;
+        color: #1e293b;
+        outline: none;
+    }
+
+    .dashboard-input:focus {
+        border-color: #f5b748;
+    }
+
+    .dark .dashboard-input {
+        background: #121316;
+        border-color: #1e293b;
+        color: #e2e8f0;
+    }
+
+    .dashboard-card {
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .account-row {
+        min-width: 0;
+    }
+
+    .account-number-input {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        display: inline-block;
+        flex-shrink: 0;
+    }
+
+    .modal-backdrop {
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(3px);
+    }
+
+    .dark .modal-backdrop {
+        background: rgba(0, 0, 0, 0.72);
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .form-label{display:block;font-size:10px;font-weight:500;color:#64748b;margin-bottom:4px;}
+    .small-label{display:block;font-size:9px;font-weight:500;color:#94a3b8;margin-bottom:4px;}
+    .section-label{display:block;font-size:10px;font-weight:700;color:#d08b00;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+    .responsibility-form-row input:disabled,.responsibility-form-row select:disabled{cursor:not-allowed;}
+</style>
+</head>
+
+<body class="bg-slate-50 dark:bg-[#101114] text-slate-800 dark:text-slate-200 transition-colors duration-200">
+
+<!-- Custom Install Banner -->
+<div id="install-banner">
+    <div id="install-banner-inner">
+        <div id="install-banner-icon">📱</div>
+
+        <div id="install-banner-text">
+            <div id="install-banner-title">
+                Install AE Tenancy Portal
+            </div>
+
+            <div id="install-banner-message">
+                Add it to your home screen for quick access.
+            </div>
+        </div>
+
+        <span id="install-action" onclick="installPortal()">
+            Install
+        </span>
+
+        <button id="install-close" onclick="closeInstallBanner()" aria-label="Close">
+            ×
+        </button>
+    </div>
+</div>
+
+<!-- Header / Brand Banner -->
+<header class="bg-white dark:bg-[#1a1c23] border-b border-slate-200 dark:border-amber-500/20 sticky top-0 z-50 backdrop-blur-md transition-colors duration-200">
+    <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between">
+
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-[#f5b748] flex items-center justify-center overflow-hidden border border-amber-500/20 shadow-md shrink-0">
+                <img src="logo.png" alt="AE Logo" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="hidden text-black font-bold text-sm">AE</span>
+            </div>
+
+            <div>
+                <h1 class="text-base font-bold text-slate-900 dark:text-slate-100 tracking-wide leading-tight">
+                    AE PROPERTY PORTAL
+                </h1>
+
+                <p class="text-[10px] text-amber-600 dark:text-amber-400/80 font-semibold">
+                    Property & Tenancy Management
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-amber-400 hover:opacity-80 transition">
+                <span id="theme-icon" class="text-xs font-bold uppercase tracking-wider">🌙 Dark</span>
+            </button>
+        </div>
+
+    </div>
+</header>
+
+<main class="max-w-xl mx-auto p-4 space-y-5">
+
+    <!-- Navigation Tabs -->
+    <div class="flex bg-slate-200 dark:bg-slate-800/80 p-1 rounded-xl gap-1">
+        <button id="btn-tab-generator" onclick="switchMainTab('generator')" class="tab-btn active flex-1 py-2 rounded-lg text-xs font-semibold transition text-slate-600 dark:text-slate-300">
+            📄 Tenancy Generator
+        </button>
+
+        <button id="btn-tab-dashboard" onclick="switchMainTab('dashboard')" class="tab-btn flex-1 py-2 rounded-lg text-xs font-semibold transition text-slate-600 dark:text-slate-300">
+            🏢 Property Dashboard
+        </button>
+    </div>
+
+
+    <!-- ================= TAB 1: TENANCY GENERATOR ================= -->
+
+    <div id="tab-generator" class="space-y-5">
+
+        <!-- File Upload Section -->
+        <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-amber-500/20 rounded-2xl p-5 shadow-sm dark:shadow-xl transition-colors duration-200">
+
+            <div class="mb-2">
+                <label class="block text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+                    Master Document
+                </label>
+
+                <p class="text-[9px] text-slate-400 dark:text-slate-500 mt-1">
+                    ✓ Saved master document is automatically used
+                </p>
+            </div>
+
+            <div class="relative border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-amber-500/50 transition rounded-xl p-4 text-center bg-slate-50 dark:bg-[#121316]/50">
+
+                <input
+                    type="file"
+                    id="docx-input"
+                    accept=".docx"
+                    class="block w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#f5b748] file:text-black hover:file:bg-amber-400 file:transition cursor-pointer"
+                />
+
+            </div>
+        </div>
+
+
+        <form onsubmit="return false;" class="space-y-5">
+
+            <!-- Landlord Particulars -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                        Landlord Particulars
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Full Name
+                        </label>
+
+                        <input type="text" id="LANDLORD_NAME" placeholder="e.g. AHMAD BIN ALI"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            NRIC
+                        </label>
+
+                        <input type="text" id="LANDLORD_IC" placeholder="e.g. 800101-01-1234"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Phone Number
+                    </label>
+
+                    <input type="text" id="LANDLORD_PHONE" placeholder="e.g. 012-3456789"
+                    oninput="this.value = this.value.toUpperCase()"
+                    class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Address
+                    </label>
+
+                    <textarea id="LANDLORD_ADDRESS" rows="2"
+                    placeholder="e.g. NO. 10, JALAN ABC, 43000 KAJANG, SELANGOR"
+                    oninput="this.value = this.value.toUpperCase()"
+                    class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"></textarea>
+                </div>
+
+            </div>
+
+
+            <!-- Tenant Particulars -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                        Tenant Particulars
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Full Name
+                        </label>
+
+                        <input type="text" id="TENANT_NAME" placeholder="e.g. MUHAMMAD ALI BIN AHMAD"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            NRIC
+                        </label>
+
+                        <input type="text" id="TENANT_IC" placeholder="e.g. 900101-01-1234"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Phone Number
+                    </label>
+
+                    <input type="text" id="TENANT_PHONE" placeholder="e.g. 012-9876543"
+                    oninput="this.value = this.value.toUpperCase()"
+                    class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Address
+                    </label>
+
+                    <textarea id="TENANT_ADDRESS" rows="2"
+                    placeholder="e.g. NO. 20, JALAN XYZ, 40150 SHAH ALAM, SELANGOR"
+                    oninput="this.value = this.value.toUpperCase()"
+                    class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"></textarea>
+                </div>
+
+            </div>
+
+
+            <!-- Property & Financials -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                        Property & Financial Terms
+                    </h2>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Property Address
+                    </label>
+
+                    <textarea id="PROPERTY_ADDRESS" rows="2"
+                    placeholder="e.g. UNIT 10-05, ABC RESIDENCES, JALAN ABC, 43000 KAJANG, SELANGOR"
+                    oninput="this.value = this.value.toUpperCase()"
+                    class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Rental Amount (Text)
+                        </label>
+
+                        <input type="text" id="RENTAL_AMOUNT" placeholder="e.g. THREE THOUSAND"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Rental Amount (RM)
+                        </label>
+
+                        <input type="text" id="RENTAL_NUMBER" placeholder="e.g. 3000"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Security Deposit (Text)
+                        </label>
+
+                        <input type="text" id="DEPOSIT_AMOUNT" placeholder="e.g. SIX THOUSAND"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Security Deposit (RM)
+                        </label>
+
+                        <input type="text" id="DEPOSIT_NUMBER" placeholder="e.g. 6000"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Utility Deposit (Text)
+                        </label>
+
+                        <input type="text" id="UTILITY_DEPOSIT" placeholder="e.g. THREE HUNDRED"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Utility Deposit (RM)
+                        </label>
+
+                        <input type="text" id="UTILITY_NUMBER" placeholder="e.g. 300"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Tenancy Details -->
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl transition-colors duration-200">
+
+                <div class="flex items-center space-x-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                        Tenancy Period & Banking
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Tenancy Duration (Text)
+                        </label>
+
+                        <input type="text" id="DURATION" placeholder="e.g. TWO"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Tenancy Duration (Years)
+                        </label>
+
+                        <input type="text" id="DURATION_YEAR" placeholder="e.g. 2"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Start Date
+                        </label>
+
+                        <input type="text" id="START_DATE" placeholder="e.g. 1 JANUARY 2027"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            End Date
+                        </label>
+
+                        <input type="text" id="END_DATE" placeholder="e.g. 31 DECEMBER 2028"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Renewal Period (Text)
+                        </label>
+
+                        <input type="text" id="RENEW" placeholder="e.g. ONE"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col justify-end">
+                        <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                            Renewal Period (Years)
+                        </label>
+
+                        <input type="text" id="RENEW_YEAR" placeholder="e.g. 1"
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                    </div>
+
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-medium text-slate-500 dark:text-slate-400 mb-1">
+                        Bank Payment Details
+                    </label>
+
+                    <input type="text" id="BANK_DETAIL" placeholder="e.g. MAYBANK - 1234567890"
+                    oninput="this.value = this.value.toUpperCase()"
+                    class="w-full bg-slate-50 dark:bg-[#121316] border border-slate-200 dark:border-slate-800 rounded-lg p-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-amber-500 focus:outline-none">
+                </div>
+
+            </div>
+
+
+            <!-- Action Button -->
+            <button onclick="generateDoc()" class="w-full bg-[#f5b748] hover:bg-amber-400 text-black font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-amber-500/10 transition active:scale-[0.99]">
+                Generate Agreement (.docx)
+            </button>
+
+        </form>
+    </div>
+
+
+    <!-- ================= TAB 2: PROPERTY DASHBOARD ================= -->
+
+    <div id="tab-dashboard" class="hidden space-y-5">
+
+        <div id="dashboard-overview"></div>
+
+        <button
+            onclick="togglePropertyForm()"
+            id="manage-property-button"
+            class="w-full bg-[#f5b748] hover:bg-amber-400 text-black border border-amber-500/20 rounded-xl p-3 text-xs font-bold shadow-sm shadow-amber-500/10 transition active:scale-[0.99]"
+        >
+            ＋ Manage Property
+        </button>
+
+        <!-- PROPERTY FORM -->
+        <div id="property-form-panel" class="hidden">
+            <div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-amber-500/20 rounded-2xl p-5 space-y-4 shadow-sm dark:shadow-xl">
+
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2 h-2 rounded-full bg-[#f5b748]"></span>
+                        <h2 id="property-form-title" class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Manage Property</h2>
+                    </div>
+                    <button type="button" onclick="togglePropertyForm(false)" class="text-[10px] text-slate-400 hover:text-slate-700 dark:hover:text-white">Cancel</button>
+                </div>
+
+                <form id="prop-form" onsubmit="saveProperty(event)" class="space-y-4">
+                    <input type="hidden" id="p_edit_id">
+
+                    <div>
+                        <label class="form-label">Property Name / Unit</label>
+                        <input type="text" id="p_name" placeholder="e.g. CYBERJAYA VISTA UNIT A-12-3" required oninput="this.value=this.value.toUpperCase()" class="dashboard-input">
+                    </div>
+
+                    <div>
+                        <label class="form-label">Property Address</label>
+                        <textarea id="p_address" rows="2" placeholder="Property address" oninput="this.value=this.value.toUpperCase()" class="dashboard-input"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Owner Name</label>
+                        <input type="text" id="p_owner" placeholder="e.g. ADAM HAFIZ" required oninput="this.value=this.value.toUpperCase()" class="dashboard-input">
+                    </div>
+
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
+                        <span class="section-label">Loan & Financing</span>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label class="small-label">Status</label><select id="p_loan_status" class="dashboard-input"><option value="FINANCED">FINANCED</option><option value="PAID OFF">PAID OFF</option></select></div>
+                            <div><label class="small-label">Bank</label><input type="text" id="p_bank" placeholder="MAYBANK" oninput="this.value=this.value.toUpperCase()" class="dashboard-input"></div>
+                            <div><label class="small-label">Installment</label><input type="number" step="0.01" id="p_installment" placeholder="1650" class="dashboard-input"></div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
+                        <span class="section-label">Property Type</span>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center gap-2 border border-slate-200 dark:border-slate-800 rounded-lg p-2 cursor-pointer"><input type="radio" name="property_type" value="STRATIFIED" checked onchange="updatePropertyTypeFields()"><span class="text-[10px] font-semibold">Stratified / Managed</span></label>
+                            <label class="flex items-center gap-2 border border-slate-200 dark:border-slate-800 rounded-lg p-2 cursor-pointer"><input type="radio" name="property_type" value="NONE" onchange="updatePropertyTypeFields()"><span class="text-[10px] font-semibold">Non-Stratified</span></label>
+                        </div>
+                    </div>
+
+                    <div id="management-fields" class="border-t border-slate-100 dark:border-slate-800 pt-3">
+                        <span class="section-label">JMB / Building Management</span>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="small-label">JMB / Management Name</label><input type="text" id="p_jmb_name" placeholder="VISTA MGMT OFFICE" oninput="this.value=this.value.toUpperCase()" class="dashboard-input"></div>
+                            <div><label class="small-label">Contact Phone</label><input type="text" id="p_jmb_phone" placeholder="012-3456789" class="dashboard-input"></div>
+                            <div class="col-span-2"><label class="small-label">JMB Office Email</label><input type="email" id="p_jmb_email" placeholder="office@example.com" class="dashboard-input"></div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="section-label">Property Responsibilities</span>
+                            <span class="text-[8px] text-slate-400">What do you need to take care of?</span>
+                        </div>
+                        <div id="account-selection-list" class="space-y-2"></div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#f5b748] hover:bg-amber-400 text-black font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition active:scale-[0.99]">Save Property</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="property-list-container" class="space-y-3"></div>
+    </div>
+
+</main>
+
+
+<!-- ================= ACCOUNT DETAIL MODAL ================= -->
+
+<div id="account-modal" class="hidden fixed inset-0 z-[80] modal-backdrop p-4 overflow-y-auto">
+
+    <div class="max-w-xl mx-auto mt-8 mb-8">
+
+        <div class="bg-white dark:bg-[#1a1c23] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+
+            <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+
+                <div>
+                    <div id="account-modal-title" class="text-sm font-bold">
+                        Account
+                    </div>
+
+                    <div id="account-modal-subtitle" class="text-[9px] text-slate-400 mt-1">
+                    </div>
+                </div>
+
+                <button
+                    onclick="closeAccountModal()"
+                    class="text-xl text-slate-400 hover:text-slate-700 dark:hover:text-white px-2"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div id="account-modal-content" class="p-4 space-y-4">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   TAB NAVIGATION SWITCHER
+========================================================= */
+
+function switchMainTab(tab) {
+
+    const genTab = document.getElementById('tab-generator');
+    const dashTab = document.getElementById('tab-dashboard');
+
+    const btnGen = document.getElementById('btn-tab-generator');
+    const btnDash = document.getElementById('btn-tab-dashboard');
+
+    if (tab === 'generator') {
+
+        genTab.classList.remove('hidden');
+        dashTab.classList.add('hidden');
+
+        btnGen.classList.add('active');
+        btnDash.classList.remove('active');
+
+    } else {
+
+        genTab.classList.add('hidden');
+        dashTab.classList.remove('hidden');
+
+        btnDash.classList.add('active');
+        btnGen.classList.remove('active');
+
+        renderPropertyDashboard();
+    }
+}
+
+
+/* =========================================================
+   PROPERTY RESPONSIBILITIES
+========================================================= */
+
+const PROPERTY_STORAGE_KEY = 'ae_properties_data';
+
+const ACCOUNT_DEFINITIONS = {
+    tnb: { type:'TNB', label:'TNB', icon:'⚡', billingType:'VARIABLE', defaultFrequency:'MONTHLY' },
+    water: { type:'WATER', label:'Air Selangor / Water', icon:'💧', billingType:'VARIABLE', defaultFrequency:'MONTHLY' },
+    maintenance: { type:'MAINTENANCE', label:'Maintenance', icon:'🏢', billingType:'FIXED', defaultFrequency:'MONTHLY' },
+    sinking: { type:'SINKING', label:'Sinking Fund', icon:'🏦', billingType:'FIXED', defaultFrequency:'MONTHLY' },
+    iwk: { type:'IWK', label:'IWK', icon:'🚽', billingType:'VARIABLE', defaultFrequency:'QUARTERLY' },
+    cukai: { type:'CUKAI', label:'Majlis / Cukai Taksiran', icon:'🏛️', billingType:'VARIABLE', defaultFrequency:'SEMI_ANNUAL' },
+    fire: { type:'FIRE_INSURANCE', label:'Fire Insurance', icon:'🔥', billingType:'VARIABLE', defaultFrequency:'ANNUAL' },
+    other: { type:'OTHER', label:'Other', icon:'＋', billingType:'VARIABLE', defaultFrequency:'ANNUAL' }
+};
+
+const FREQUENCY_LABELS = {
+    MONTHLY:'Monthly', QUARTERLY:'Quarterly', SEMI_ANNUAL:'Semi-annually', ANNUAL:'Annually', ONE_OFF:'One-off'
+};
+
+let savedProperties = [];
+let activePropertyId = null;
+let activeAccountId = null;
+
+function createId(prefix='id') {
+    if (window.crypto && crypto.randomUUID) return prefix + '_' + crypto.randomUUID();
+    return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+}
+
+function numberValue(value) {
+    const n = parseFloat(value);
+    return Number.isFinite(n) ? n : 0;
+}
+
+function todayISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function money(value) {
+    return 'RM ' + numberValue(value).toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    const d = new Date(dateString + 'T00:00:00');
+    if (Number.isNaN(d.getTime())) return dateString;
+    return d.toLocaleDateString('en-MY',{day:'numeric',month:'short',year:'numeric'});
+}
+
+function escapeHtml(value) {
+    return String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+function addMonths(dateString, months) {
+    const d = new Date((dateString || todayISO()) + 'T00:00:00');
+    const day = d.getDate();
+    d.setDate(1);
+    d.setMonth(d.getMonth() + months);
+    const last = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+    d.setDate(Math.min(day,last));
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function advanceDueDate(dateString, frequency) {
+    if (!dateString) return todayISO();
+    if (frequency === 'MONTHLY') return addMonths(dateString,1);
+    if (frequency === 'QUARTERLY') return addMonths(dateString,3);
+    if (frequency === 'SEMI_ANNUAL') return addMonths(dateString,6);
+    if (frequency === 'ANNUAL') return addMonths(dateString,12);
+    return '';
+}
+
+function frequencyOptions(selected='MONTHLY') {
+    return Object.entries(FREQUENCY_LABELS).map(([value,label]) => `<option value="${value}" ${selected===value?'selected':''}>${label}</option>`).join('');
+}
+
+function normaliseAccount(account) {
+    const def = Object.values(ACCOUNT_DEFINITIONS).find(d => d.type === account.type);
+    return {
+        ...account,
+        id: account.id || createId('account'),
+        label: account.label || def?.label || 'Other',
+        billingType: account.billingType || def?.billingType || 'VARIABLE',
+        frequency: account.frequency || def?.defaultFrequency || 'MONTHLY',
+        expectedAmount: numberValue(account.expectedAmount),
+        openingBalance: numberValue(account.openingBalance),
+        openingBalanceDate: account.openingBalanceDate || todayISO(),
+        nextDueDate: account.nextDueDate || account.nextDue || '',
+        enabled: account.enabled !== false,
+        bills: Array.isArray(account.bills) ? account.bills : [],
+        payments: Array.isArray(account.payments) ? account.payments : [],
+        history: Array.isArray(account.history) ? account.history : [],
+        reminderDays: numberValue(account.reminderDays || 7)
+    };
+}
+
+function migrateLegacyAccount(type, accountNumber, oldAmount, oldFrequency) {
+    const def = ACCOUNT_DEFINITIONS[type];
+    return normaliseAccount({
+        id:createId(type), type:def.type, label:def.label, icon:def.icon,
+        accountNumber:accountNumber || '', billingType:def.billingType,
+        expectedAmount:numberValue(oldAmount), frequency:oldFrequency || def.defaultFrequency,
+        nextDueDate:'', dueDay:'', enabled:Boolean(accountNumber) || numberValue(oldAmount)>0,
+        bills:[], payments:[], history:[]
+    });
+}
+
+function migrateProperty(old) {
+    if (old && old.property && Array.isArray(old.accounts)) {
+        old.accounts = old.accounts.map(normaliseAccount);
+        old.management = old.management || {type:'NONE',name:'',phone:'',email:''};
+        old.management.email = old.management.email || old.jmbEmail || '';
+        return old;
+    }
+
+    const accounts=[];
+    if (old?.tnb) accounts.push(migrateLegacyAccount('tnb',old.tnb,0,'MONTHLY'));
+    if (old?.water) accounts.push(migrateLegacyAccount('water',old.water,0,'MONTHLY'));
+    if (old?.iwk) accounts.push(migrateLegacyAccount('iwk',old.iwk,0,'QUARTERLY'));
+    if (old?.cukai) accounts.push(migrateLegacyAccount('cukai',old.cukai,0,'SEMI_ANNUAL'));
+    if (old?.maintFee) accounts.push(migrateLegacyAccount('maintenance','',old.maintFee,'MONTHLY'));
+
+    return {
+        id:old?.id || createId('property'),
+        property:{name:old?.name || '',address:old?.address || old?.name || '',owner:old?.owner || ''},
+        financing:{status:old?.loanStatus || 'FINANCED',bank:old?.bank || '',installment:numberValue(old?.installment)},
+        management:{type:old?.propertyType || 'STRATIFIED',name:old?.jmbName || '',phone:old?.jmbPhone || '',email:old?.jmbEmail || ''},
+        accounts
+    };
+}
+
+function loadProperties() {
+    let raw=[];
+    try { raw=JSON.parse(localStorage.getItem(PROPERTY_STORAGE_KEY)) || []; } catch(e) { console.error(e); }
+    if (!Array.isArray(raw)) raw=[];
+    savedProperties=raw.map(migrateProperty);
+    if (!savedProperties.length) {
+        savedProperties=[{
+            id:'p_1', property:{name:'CYBERJAYA VISTA UNIT A-12-3',address:'CYBERJAYA VISTA UNIT A-12-3',owner:'ADAM HAFIZ'},
+            financing:{status:'FINANCED',bank:'MAYBANK',installment:1650},
+            management:{type:'STRATIFIED',name:'VISTA MGMT OFFICE',phone:'012-3456789',email:''},
+            accounts:[
+                {id:'tnb_001',type:'TNB',label:'TNB',icon:'⚡',accountNumber:'2201928381',billingType:'VARIABLE',expectedAmount:0,frequency:'MONTHLY',nextDueDate:'',enabled:true,history:[],bills:[],payments:[]},
+                {id:'water_001',type:'WATER',label:'Air Selangor / Water',icon:'💧',accountNumber:'10029384',billingType:'VARIABLE',expectedAmount:0,frequency:'MONTHLY',nextDueDate:'',enabled:true,history:[],bills:[],payments:[]},
+                {id:'iwk_001',type:'IWK',label:'IWK',icon:'🚽',accountNumber:'8839201',billingType:'VARIABLE',expectedAmount:0,frequency:'QUARTERLY',nextDueDate:'',enabled:true,history:[],bills:[],payments:[]},
+                {id:'cukai_001',type:'CUKAI',label:'Majlis / Cukai Taksiran',icon:'🏛️',accountNumber:'MPSEPANG-992',billingType:'VARIABLE',expectedAmount:0,frequency:'SEMI_ANNUAL',nextDueDate:'',enabled:true,history:[],bills:[],payments:[]},
+                {id:'maintenance_001',type:'MAINTENANCE',label:'Maintenance',icon:'🏢',accountNumber:'',billingType:'FIXED',expectedAmount:303,frequency:'MONTHLY',nextDueDate:'',enabled:true,history:[],bills:[],payments:[]},
+                {id:'sinking_001',type:'SINKING',label:'Sinking Fund',icon:'🏦',accountNumber:'',billingType:'FIXED',expectedAmount:30.30,frequency:'MONTHLY',nextDueDate:'',enabled:true,history:[],bills:[],payments:[]}
+            ]
+        }];
+    }
+    savedProperties.forEach(p => p.accounts=(p.accounts||[]).map(normaliseAccount));
+    persistProperties();
+}
+
+function persistProperties() {
+    localStorage.setItem(PROPERTY_STORAGE_KEY,JSON.stringify(savedProperties));
+}
+
+function getPropertyType() {
+    return document.querySelector('input[name="property_type"]:checked')?.value || 'STRATIFIED';
+}
+
+function renderAccountSelection(existingAccounts=[]) {
+    const container=document.getElementById('account-selection-list');
+    if (!container) return;
+    const typeOrder=['tnb','water','maintenance','sinking','iwk','cukai','fire','other'];
+    container.innerHTML=typeOrder.map(key=>{
+        const def=ACCOUNT_DEFINITIONS[key];
+        const existing=existingAccounts.find(a=>a.type===def.type) || {};
+        const otherLabel=key==='other' ? (existing.label && existing.label!=='Other' ? existing.label : '') : '';
+        const hiddenFire=key==='fire' ? ' id="fire-responsibility-row"' : '';
+        return `<div${hiddenFire} class="responsibility-form-row border border-slate-200 dark:border-slate-800 rounded-xl p-3 ${key==='fire'?'':''}">
+            <div class="flex items-center gap-2 mb-2">
+                <input type="checkbox" id="acc_${key}_enabled" ${existing.enabled?'checked':''} onchange="toggleResponsibilityForm('${key}')">
+                <span class="text-[11px] font-semibold">${def.icon} ${key==='other'?'Other responsibility':def.label}</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                ${key==='other'?`<div class="col-span-2"><label class="small-label">Name</label><input id="acc_${key}_label" value="${escapeHtml(otherLabel)}" placeholder="e.g. Pest Control" class="dashboard-input"></div>`:''}
+                <div><label class="small-label">Account / Reference</label><input id="acc_${key}_number" value="${escapeHtml(existing.accountNumber||'')}" placeholder="Optional" class="dashboard-input"></div>
+                <div><label class="small-label">Expected Amount (RM)</label><input type="number" step="0.01" id="acc_${key}_amount" value="${existing.expectedAmount||''}" placeholder="0.00" class="dashboard-input"></div>
+                <div><label class="small-label">Opening Outstanding (RM)</label><input type="number" step="0.01" id="acc_${key}_opening" value="${existing.openingBalance||''}" placeholder="0.00" class="dashboard-input"></div>
+                <div><label class="small-label">Frequency</label><select id="acc_${key}_frequency" class="dashboard-input">${frequencyOptions(existing.frequency||def.defaultFrequency)}</select></div>
+                <div><label class="small-label">Next Due</label><input type="date" id="acc_${key}_due" value="${existing.nextDueDate||''}" class="dashboard-input"></div>
+            </div>
+        </div>`;
+    }).join('');
+    updatePropertyTypeFields();
+}
+
+function toggleResponsibilityForm(key) {
+    const enabled=document.getElementById('acc_'+key+'_enabled')?.checked;
+    ['acc_'+key+'_number','acc_'+key+'_amount','acc_'+key+'_opening','acc_'+key+'_frequency','acc_'+key+'_due','acc_'+key+'_label'].forEach(id=>{
+        const el=document.getElementById(id); if(el){el.disabled=!enabled; el.classList.toggle('opacity-50',!enabled);}
+    });
+}
+
+function getFormAccount(key,existingAccounts=[]) {
+    const checkbox=document.getElementById('acc_'+key+'_enabled');
+    if (!checkbox?.checked) return null;
+    const def=ACCOUNT_DEFINITIONS[key];
+    const existing=existingAccounts.find(a=>a.type===def.type) || {};
+    const account=normaliseAccount({
+        ...existing,id:existing.id||createId('account'),type:def.type,
+        label:key==='other'?(document.getElementById('acc_other_label')?.value.trim()||'Other'):def.label,
+        icon:def.icon,accountNumber:document.getElementById('acc_'+key+'_number')?.value.trim()||'',
+        billingType:def.billingType,expectedAmount:numberValue(document.getElementById('acc_'+key+'_amount')?.value),
+        openingBalance:numberValue(document.getElementById('acc_'+key+'_opening')?.value),
+        openingBalanceDate:existing.openingBalanceDate||todayISO(),
+        frequency:document.getElementById('acc_'+key+'_frequency')?.value||def.defaultFrequency,
+        nextDueDate:document.getElementById('acc_'+key+'_due')?.value||existing.nextDueDate||'',enabled:true
+    });
+    return account;
+}
+
+function saveProperty(event) {
+    event.preventDefault();
+    const editId=document.getElementById('p_edit_id').value;
+    const existing=editId?savedProperties.find(p=>p.id===editId):null;
+    const type=getPropertyType();
+    const keys=['tnb','water','maintenance','sinking','iwk','cukai','fire','other'];
+    const accounts=keys.map(k=>getFormAccount(k,existing?.accounts||[])).filter(Boolean);
+    const property={
+        id:editId||createId('property'),
+        property:{name:document.getElementById('p_name').value.trim(),address:document.getElementById('p_address').value.trim(),owner:document.getElementById('p_owner').value.trim()},
+        financing:{status:document.getElementById('p_loan_status').value,bank:document.getElementById('p_bank').value.trim(),installment:numberValue(document.getElementById('p_installment').value)},
+        management:{type,name:type==='STRATIFIED'?document.getElementById('p_jmb_name').value.trim():'',phone:type==='STRATIFIED'?document.getElementById('p_jmb_phone').value.trim():'',email:type==='STRATIFIED'?document.getElementById('p_jmb_email').value.trim():''},
+        accounts
+    };
+    if(editId){ const i=savedProperties.findIndex(p=>p.id===editId); if(i>=0)savedProperties[i]=property; }
+    else savedProperties.push(property);
+    persistProperties(); resetPropertyForm(); togglePropertyForm(false); renderPropertyDashboard();
+}
+
+function editProperty(id) {
+    const p=savedProperties.find(x=>x.id===id); if(!p)return;
+    const prop=p.property||{}, fin=p.financing||{}, mg=p.management||{};
+    document.getElementById('p_edit_id').value=p.id;
+    document.getElementById('p_name').value=prop.name||'';
+    document.getElementById('p_address').value=prop.address||'';
+    document.getElementById('p_owner').value=prop.owner||'';
+    document.getElementById('p_loan_status').value=fin.status||'FINANCED';
+    document.getElementById('p_bank').value=fin.bank||'';
+    document.getElementById('p_installment').value=fin.installment||'';
+    const type=mg.type||'STRATIFIED';
+    document.querySelectorAll('input[name="property_type"]').forEach(r=>r.checked=r.value===type);
+    document.getElementById('p_jmb_name').value=mg.name||'';
+    document.getElementById('p_jmb_phone').value=mg.phone||'';
+    document.getElementById('p_jmb_email').value=mg.email||'';
+    renderAccountSelection(p.accounts||[]);
+    document.getElementById('property-form-title').innerText='Edit Property';
+    togglePropertyForm(true);
+}
+
+function deleteProperty(id) {
+    const p=savedProperties.find(x=>x.id===id); const name=p?.property?.name||'this property';
+    if(confirm(`Delete ${name} and all its responsibility records?`)){ savedProperties=savedProperties.filter(x=>x.id!==id); persistProperties(); renderPropertyDashboard(); }
+}
+
+function togglePropertyForm(show) {
+    const panel=document.getElementById('property-form-panel');
+    if(show===undefined) show=panel.classList.contains('hidden');
+    if(show){
+        const isEditing=Boolean(document.getElementById('p_edit_id')?.value);
+        if(!isEditing){
+            document.getElementById('property-form-title').innerText='Manage Property';
+            renderAccountSelection([]);
+        }
+        panel.classList.remove('hidden');
+    }
+    else {
+        panel.classList.add('hidden');
+    }
+}
+
+function resetPropertyForm() {
+    document.getElementById('prop-form')?.reset();
+    document.getElementById('p_edit_id').value='';
+    document.querySelector('input[name="property_type"][value="STRATIFIED"]').checked=true;
+    document.getElementById('property-form-title').innerText='Manage Property';
+    renderAccountSelection([]);
+}
+
+function updatePropertyTypeFields() {
+    const type=getPropertyType();
+    document.getElementById('management-fields')?.classList.toggle('hidden',type!=='STRATIFIED');
+    const fire=document.getElementById('fire-responsibility-row');
+    if(fire){
+        fire.classList.toggle('hidden',type!=='STRATIFIED');
+        const cb=document.getElementById('acc_fire_enabled');
+        if(type!=='STRATIFIED' && cb){ cb.checked=false; toggleResponsibilityForm('fire'); }
+    }
+    Object.keys(ACCOUNT_DEFINITIONS).forEach(toggleResponsibilityForm);
+}
+
+function getLastRecord(account) {
+    const history=account.history||[];
+    return history.length ? history[history.length-1] : null;
+}
+
+function getAccountOutstanding(account) {
+    const opening=numberValue(account.openingBalance);
+    const movement=(account.history||[]).reduce((sum,r)=>sum+numberValue(r.billed)-numberValue(r.paid),0);
+    return Math.max(0, opening + movement);
+}
+
+function getCurrentBalance(account) {
+    return getAccountOutstanding(account);
+}
+
+function getAccountStatus(account) {
+    const outstanding=getAccountOutstanding(account);
+    const due=account.nextDueDate;
+    if(!due && outstanding>0.005) return {key:'ATTENTION',label:'Need attention',icon:'🔴',classes:'text-red-600 dark:text-red-400'};
+    if(!due) return {key:'NO_DATE',label:'Set next due',icon:'○',classes:'text-slate-500'};
+    const d=new Date(due+'T00:00:00'); const today=new Date(); today.setHours(0,0,0,0);
+    const diff=Math.round((d-today)/86400000);
+    if(diff<0 || (diff===0 && outstanding>0.005)) return {key:'ATTENTION',label:'Due / overdue',icon:'🔴',classes:'text-red-600 dark:text-red-400'};
+    if(diff<=30) return {key:'INCOMING',label:diff<=7?(diff===0?'Due today':`Due in ${diff} days`):`Due ${formatDate(due)}`,icon:'🟡',classes:'text-amber-600 dark:text-amber-400'};
+    return {key:'OK',label:'Upcoming',icon:'○',classes:'text-slate-500 dark:text-slate-400'};
+}
+
+function getDashboardItems() {
+    const incoming=[], attention=[];
+    savedProperties.forEach(property=>{
+        (property.accounts||[]).filter(a=>a.enabled).forEach(account=>{
+            const status=getAccountStatus(account);
+            const item={property,account,status};
+            if(status.key==='ATTENTION') attention.push(item);
+            else if(status.key==='INCOMING') incoming.push(item);
+        });
+    });
+    return {incoming,attention};
+}
+
+function renderDashboardItem(item, type) {
+    const {property,account,status}=item;
+    const outstanding=getAccountOutstanding(account);
+    const amount=account.billingType==='FIXED'&&account.expectedAmount?money(account.expectedAmount):(getLastRecord(account)?money(getLastRecord(account).billed):(account.expectedAmount?money(account.expectedAmount):'Amount varies'));
+    const sub=type==='attention' && outstanding>0.005 ? `${amount} · Outstanding ${money(outstanding)}` : `${amount} · ${status.label}`;
+    return `<button type="button" onclick="openDashboardItem('${property.id}','${account.id}')" class="w-full text-left flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+        <span class="text-base">${account.icon||'•'}</span>
+        <span class="min-w-0 flex-1"><span class="block text-[10px] font-semibold truncate">${escapeHtml(property.property?.name||'Unnamed property')} · ${escapeHtml(account.label)}</span><span class="block text-[8px] text-slate-400 mt-0.5 truncate">${escapeHtml(sub)}</span></span>
+        <span class="text-[9px] font-bold ${status.classes}">›</span>
+    </button>`;
+}
+
+function toggleDashboardItems(type) {
+    const panel=document.getElementById('dashboard-items-panel');
+    if(!panel)return;
+    const current=panel.dataset.type;
+    if(current===type && !panel.classList.contains('hidden')) { panel.classList.add('hidden'); panel.dataset.type=''; return; }
+    const {incoming,attention}=getDashboardItems();
+    const items=type==='incoming'?incoming:attention;
+    const title=type==='incoming'?'Incoming':'Need Attention';
+    const icon=type==='incoming'?'🟡':'🔴';
+    panel.innerHTML=`<div class="border-t border-slate-100 dark:border-slate-800 mt-4 pt-4"><div class="flex items-center justify-between mb-2"><div class="text-[9px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">${icon} ${title}</div><button type="button" onclick="toggleDashboardItems('${type}')" class="text-[9px] text-slate-400">Close</button></div>${items.length?items.map(x=>renderDashboardItem(x,type)).join(''):`<div class="text-[9px] text-slate-400 py-3">Nothing here.</div>`}</div>`;
+    panel.dataset.type=type;
+    panel.classList.remove('hidden');
+}
+
+function openDashboardItem(propertyId,accountId) {
+    const property=savedProperties.find(p=>p.id===propertyId);
+    if(!property)return;
+    const el=document.getElementById('property-details-'+propertyId);
+    if(el && el.classList.contains('hidden')) togglePropertyDetails(propertyId);
+    openAccountModal(propertyId,accountId);
+}
+
+function renderPropertyDashboard() {
+    loadPropertiesIfNeeded();
+    const overview=document.getElementById('dashboard-overview');
+    const total=savedProperties.length;
+    const {incoming,attention}=getDashboardItems();
+    const opening=savedProperties.reduce((sum,p)=>(sum+(p.accounts||[]).filter(a=>a.enabled).reduce((s,a)=>s+numberValue(a.openingBalance),0)),0);
+    const outstanding=savedProperties.reduce((sum,p)=>(sum+(p.accounts||[]).filter(a=>a.enabled).reduce((s,a)=>s+getAccountOutstanding(a),0)),0);
+    overview.innerHTML=`<div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-amber-500/20 rounded-2xl p-5 shadow-sm dark:shadow-xl">
+        <div class="flex items-center justify-between"><div><div class="text-[10px] text-amber-600 dark:text-amber-400 font-bold uppercase tracking-wider">My Properties</div><div class="text-lg font-bold text-slate-800 dark:text-slate-100 mt-0.5">${total} <span class="text-[10px] font-medium text-slate-400">${total===1?'Property':'Properties'}</span></div></div><div class="text-right"><div class="text-[8px] text-slate-400 uppercase">Current Outstanding</div><div class="text-base font-bold ${outstanding>0?'text-red-500':'text-green-500'}">${money(outstanding)}</div></div></div>
+        <div class="grid grid-cols-2 gap-2 mt-4">
+            <button type="button" onclick="toggleDashboardItems('incoming')" class="bg-amber-500/10 rounded-xl p-3 text-center hover:bg-amber-500/15 transition"><div class="text-sm">🟡</div><div class="text-lg font-bold text-amber-600 dark:text-amber-400">${incoming.length}</div><div class="text-[8px] text-slate-400 uppercase">Incoming</div></button>
+            <button type="button" onclick="toggleDashboardItems('attention')" class="bg-red-500/10 rounded-xl p-3 text-center hover:bg-red-500/15 transition"><div class="text-sm">🔴</div><div class="text-lg font-bold text-red-600 dark:text-red-400">${attention.length}</div><div class="text-[8px] text-slate-400 uppercase">Need Attention</div></button>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800"><div><div class="text-[8px] text-slate-400 uppercase">Opening Outstanding</div><div class="text-[10px] font-semibold mt-0.5">${money(opening)}</div></div><div class="text-right"><div class="text-[8px] text-slate-400 uppercase">After Records</div><div class="text-[10px] font-semibold mt-0.5">${money(outstanding)}</div></div></div>
+        <div id="dashboard-items-panel" class="hidden" data-type=""></div>
+    </div>`;
+    renderPropertyList();
+}
+
+function loadPropertiesIfNeeded(){ if(!Array.isArray(savedProperties)||!savedProperties.length) loadProperties(); }
+
+function renderPropertyList() {
+    const container=document.getElementById('property-list-container');
+    if(!container)return;
+    if(!savedProperties.length){ container.innerHTML='<div class="text-center text-xs text-slate-400 p-6">No properties added yet.</div>'; return; }
+    container.innerHTML=savedProperties.map(p=>{
+        const accounts=(p.accounts||[]).filter(a=>a.enabled);
+        const incoming=accounts.filter(a=>getAccountStatus(a).key==='INCOMING').length;
+        const attention=accounts.filter(a=>getAccountStatus(a).key==='ATTENTION').length;
+        const opening=accounts.reduce((s,a)=>s+numberValue(a.openingBalance),0);
+        const outstanding=accounts.reduce((s,a)=>s+getAccountOutstanding(a),0);
+        return `<div class="bg-white dark:bg-[#1a1c23] border border-slate-200 dark:border-amber-500/20 rounded-2xl overflow-hidden shadow-sm dark:shadow-xl">
+            <button type="button" class="w-full p-4 text-left" onclick="togglePropertyDetails('${p.id}')"><div class="flex items-center justify-between gap-3"><div class="min-w-0"><div class="text-xs font-bold truncate">${escapeHtml(p.property?.name||'Unnamed property')}</div><div class="text-[9px] text-slate-400 truncate mt-1">${escapeHtml(p.property?.address||'')}</div></div><div class="shrink-0 text-right"><div class="flex items-center gap-2 text-[8px]"><span class="text-amber-600 dark:text-amber-400">🟡 ${incoming}</span><span class="text-red-500">🔴 ${attention}</span></div><div class="text-[8px] text-slate-400 mt-1">Outstanding ${money(outstanding)}</div><div id="property-chevron-${p.id}" class="text-slate-400 text-lg leading-none mt-1">›</div></div></div></button>
+            <div id="property-details-${p.id}" class="hidden border-t border-slate-100 dark:border-slate-800 p-4"><div class="grid grid-cols-2 gap-3 mb-3"><div><div class="text-[8px] text-slate-400 uppercase">Opening Outstanding</div><div class="text-[10px] font-semibold mt-0.5">${money(opening)}</div></div><div class="text-right"><div class="text-[8px] text-slate-400 uppercase">Current Outstanding</div><div class="text-[10px] font-semibold mt-0.5 ${outstanding>0?'text-red-500':'text-green-500'}">${money(outstanding)}</div></div></div>${renderPropertyResponsibilities(p)}</div>
+        </div>`;
+    }).join('');
+}
+
+function togglePropertyDetails(id){
+    const el=document.getElementById('property-details-'+id), chev=document.getElementById('property-chevron-'+id); if(!el)return;
+    const open=el.classList.contains('hidden'); el.classList.toggle('hidden',!open); if(chev)chev.innerText=open?'⌄':'›';
+}
+
+function renderPropertyResponsibilities(property) {
+    const accounts=(property.accounts||[]).filter(a=>a.enabled);
+    if(!accounts.length) return `<div class="text-xs text-slate-400 py-2">No responsibilities added.</div><button onclick="editProperty('${property.id}')" class="mt-2 text-[10px] font-bold text-amber-600">＋ Add responsibilities</button>`;
+    const rows=accounts.map(account=>{
+        const status=getAccountStatus(account); const last=getLastRecord(account); const balance=getCurrentBalance(account);
+        const amount=account.billingType==='FIXED' && account.expectedAmount ? money(account.expectedAmount) : (last?money(last.billed):account.expectedAmount?money(account.expectedAmount):'Amount varies');
+        const detail=account.billingType==='FIXED' ? `${amount} · ${FREQUENCY_LABELS[account.frequency]||account.frequency}` : `${FREQUENCY_LABELS[account.frequency]||account.frequency} · ${last?`Last billed ${money(last.billed)}`:'Bill amount varies'}`;
+        const balanceText=balance>0.005 ? `<div class="text-[8px] text-red-500 mt-0.5">Outstanding ${money(balance)}</div>`:'';
+        const action=`<button onclick="event.stopPropagation();openAccountModal('${property.id}','${account.id}')" class="px-3 py-1.5 rounded-lg bg-[#f5b748] text-black text-[9px] font-bold">Paid</button>`;
+        return `<div class="py-3 border-b border-slate-100 dark:border-slate-800 last:border-0"><div class="flex items-center gap-2"><div class="text-base">${account.icon||'•'}</div><div class="min-w-0 flex-1"><div class="flex items-center gap-2"><span class="text-[11px] font-semibold truncate">${escapeHtml(account.label)}</span><span class="text-[8px] ${status.classes}">${status.icon} ${status.label}</span></div><div class="text-[8px] text-slate-400 mt-0.5">${escapeHtml(detail)}</div>${balanceText}</div>${action}</div></div>`;
+    }).join('');
+    return `<div><div class="flex items-center justify-between mb-2"><span class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Responsibilities</span><div class="flex gap-2"><button onclick="editProperty('${property.id}')" class="text-[9px] text-amber-600 font-semibold">Edit</button><button onclick="deleteProperty('${property.id}')" class="text-[9px] text-red-500 font-semibold">Delete</button></div></div>${rows}<div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-[8px] text-slate-400">${property.management?.name?escapeHtml(property.management.name):''}${property.management?.email?' · '+escapeHtml(property.management.email):''}</div></div>`;
+}
+
+function getAccountNetBalance(account){
+    const opening=numberValue(account.openingBalance);
+    const movement=(account.history||[]).reduce((sum,r)=>sum+numberValue(r.billed)-numberValue(r.paid),0);
+    return opening + movement;
+}
+
+function getAccountCredit(account){
+    return Math.max(0,-getAccountNetBalance(account));
+}
+
+function openAccountModal(propertyId,accountId){
+    activePropertyId=propertyId; activeAccountId=accountId;
+    const property=savedProperties.find(p=>p.id===propertyId), account=property?.accounts?.find(a=>a.id===accountId); if(!property||!account)return;
+    document.getElementById('account-modal-title').innerText=account.label;
+    document.getElementById('account-modal-subtitle').innerText=property.property?.name||'';
+    document.getElementById('account-modal-content').innerHTML=renderAccountModalContent(property,account);
+    document.getElementById('account-modal').classList.remove('hidden');
+}
+
+function closeAccountModal(){ document.getElementById('account-modal').classList.add('hidden'); activePropertyId=null; activeAccountId=null; }
+
+function renderAccountModalContent(property,account){
+    const status=getAccountStatus(account);
+    const outstanding=getAccountOutstanding(account);
+    const credit=getAccountCredit(account);
+    const defaultBilled=account.billingType==='FIXED' ? numberValue(account.expectedAmount) : numberValue((account.history||[]).length ? getLastRecord(account).billed : account.expectedAmount);
+    const history=(account.history||[]).slice().reverse().map(r=>`<div class="py-2 border-b border-slate-100 dark:border-slate-800 text-[9px]"><div class="flex justify-between gap-2"><span>${formatDate(r.date)}</span><span class="text-right">Billed ${money(r.billed)} · Paid ${money(r.paid)}</span></div>${numberValue(r.paid)<numberValue(r.billed)-0.005?`<div class="text-red-500 mt-0.5">Remaining ${money(numberValue(r.billed)-numberValue(r.paid))}</div>`:''}${numberValue(r.paid)>numberValue(r.billed)+0.005?`<div class="text-green-600 dark:text-green-400 mt-0.5">Credit ${money(numberValue(r.paid)-numberValue(r.billed))}</div>`:''}${r.notes?`<div class="text-slate-400 mt-0.5">${escapeHtml(r.notes)}</div>`:''}</div>`).join('') || '<div class="text-[9px] text-slate-400">No records yet.</div>';
+    return `<div class="space-y-4">
+        <div class="bg-slate-50 dark:bg-[#121316] rounded-xl p-4"><div class="flex justify-between"><div><div class="text-[9px] text-slate-400 uppercase">Current Outstanding</div><div class="text-xl font-bold mt-1 ${outstanding>0?'text-red-500':'text-green-500'}">${money(outstanding)}</div>${credit>0.005?`<div class="text-[9px] text-green-600 dark:text-green-400 mt-1">Credit / Surplus ${money(credit)}</div>`:''}</div><div class="text-right"><div class="text-[9px] ${status.classes}">${status.icon} ${status.label}</div><div class="text-[9px] text-slate-400 mt-1">${FREQUENCY_LABELS[account.frequency]||account.frequency}</div></div></div><div class="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-slate-200 dark:border-slate-800"><div><div class="text-[8px] text-slate-400 uppercase">Opening Outstanding</div><div class="text-[10px] font-semibold mt-1">${money(account.openingBalance)}</div></div><div class="text-right"><div class="text-[8px] text-slate-400 uppercase">Next Due</div><div class="text-[10px] font-semibold mt-1">${formatDate(account.nextDueDate)}</div></div></div></div>
+        <div class="border border-slate-200 dark:border-slate-800 rounded-xl p-3 space-y-3"><div class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Account Details</div><div><label class="small-label">Account / Reference</label><input id="modal_account_number" value="${escapeHtml(account.accountNumber||'')}" class="dashboard-input"></div><div class="grid grid-cols-2 gap-2"><div><label class="small-label">Opening Outstanding (RM)</label><input id="modal_opening_balance" type="number" step="0.01" value="${numberValue(account.openingBalance)}" class="dashboard-input"></div><div><label class="small-label">Opening As At</label><input id="modal_opening_date" type="date" value="${escapeHtml(account.openingBalanceDate||todayISO())}" class="dashboard-input"></div></div><div class="grid grid-cols-2 gap-2"><div><label class="small-label">Expected Amount (RM)</label><input id="modal_expected_amount" type="number" step="0.01" value="${numberValue(account.expectedAmount)}" class="dashboard-input"></div><div><label class="small-label">Next Due</label><input id="modal_next_due" type="date" value="${escapeHtml(account.nextDueDate||'')}" class="dashboard-input"></div></div><button onclick="saveAccountDetails()" class="w-full bg-slate-100 dark:bg-slate-800 rounded-lg py-2 text-[10px] font-bold">Save Details</button></div>
+        <div class="border border-amber-300/60 dark:border-amber-500/30 rounded-xl p-3 space-y-3"><div><div class="text-[9px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">Record Payment</div><div class="text-[8px] text-slate-400 mt-1">Record the actual amount you paid. It can be less than, equal to, or more than the bill.</div></div><div class="grid grid-cols-2 gap-2"><div><label class="small-label">Due / Expected (RM)</label><input id="payment_billed" type="number" step="0.01" value="${defaultBilled||''}" class="dashboard-input"></div><div><label class="small-label">Amount Paid (RM)</label><input id="payment_paid" type="number" step="0.01" placeholder="0.00" class="dashboard-input"></div><div class="col-span-2"><label class="small-label">Date Paid</label><input id="payment_date" type="date" value="${todayISO()}" class="dashboard-input"></div><div class="col-span-2"><label class="small-label">Notes (optional)</label><textarea id="payment_notes" rows="2" placeholder="e.g. Paid together with previous month / partial payment" class="dashboard-input"></textarea></div></div><button onclick="recordPayment()" class="w-full bg-[#f5b748] hover:bg-amber-400 text-black rounded-lg py-2.5 text-[10px] font-bold">Save Payment</button></div>
+        <div><div class="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-2">Payment History</div>${history}</div>
+    </div>`;
+}
+
+function saveAccountDetails(){
+    const property=savedProperties.find(p=>p.id===activePropertyId), account=property?.accounts?.find(a=>a.id===activeAccountId); if(!account)return;
+    account.accountNumber=document.getElementById('modal_account_number')?.value.trim()||'';
+    account.openingBalance=numberValue(document.getElementById('modal_opening_balance')?.value);
+    account.openingBalanceDate=document.getElementById('modal_opening_date')?.value||todayISO();
+    account.expectedAmount=numberValue(document.getElementById('modal_expected_amount')?.value);
+    account.nextDueDate=document.getElementById('modal_next_due')?.value||'';
+    persistProperties();
+    renderPropertyDashboard();
+    document.getElementById('account-modal-content').innerHTML=renderAccountModalContent(property,account);
+}
+
+function recordPayment(){
+    const property=savedProperties.find(p=>p.id===activePropertyId), account=property?.accounts?.find(a=>a.id===activeAccountId); if(!account)return;
+    const billed=numberValue(document.getElementById('payment_billed')?.value);
+    const paid=numberValue(document.getElementById('payment_paid')?.value);
+    const date=document.getElementById('payment_date')?.value||todayISO();
+    const notes=document.getElementById('payment_notes')?.value.trim()||'';
+
+    if(billed<=0){ alert('Please enter the due / expected amount.'); return; }
+    if(paid<=0){ alert('Please enter the amount paid.'); return; }
+
+    account.history=account.history||[];
+    account.history.push({
+        id:createId('payment'),
+        date,
+        billed,
+        paid,
+        balance:billed-paid,
+        notes,
+        kind:'PAYMENT'
+    });
+
+    // A full payment or overpayment completes this billing cycle and moves the next due date forward.
+    if(paid>=billed){
+        account.nextDueDate=advanceDueDate(account.nextDueDate||date,account.frequency);
+    }
+
+    persistProperties();
+    closeAccountModal();
+    renderPropertyDashboard();
+}
+
+function autofillTenancy(owner,name){
+    document.getElementById('LANDLORD_NAME').value=owner||'';
+    document.getElementById('PROPERTY_ADDRESS').value=name||'';
+    switchMainTab('generator');
+}
+
+/* =========================================================
+   TENANCY AUTOFILL
+========================================================= */
+
+function autofillTenancy(owner, name) {
+
+    document.getElementById(
+        'LANDLORD_NAME'
+    ).value = owner || '';
+
+
+    document.getElementById(
+        'PROPERTY_ADDRESS'
+    ).value = name || '';
+
+
+    switchMainTab('generator');
+
+}
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function toggleTheme() {
+
+    const html =
+        document.documentElement;
+
+    const icon =
+        document.getElementById(
+            'theme-icon'
+        );
+
+
+    if (html.classList.contains('dark')) {
+
+        html.classList.remove('dark');
+
+        icon.innerText = '☀️ Light';
+
+        localStorage.setItem(
+            'theme',
+            'light'
+        );
+
+    } else {
+
+        html.classList.add('dark');
+
+        icon.innerText = '🌙 Dark';
+
+        localStorage.setItem(
+            'theme',
+            'dark'
+        );
+
+    }
+
+}
+
+
+if (
+    localStorage.getItem('theme') === 'dark' ||
+    (
+        !('theme' in localStorage) &&
+        window.matchMedia(
+            '(prefers-color-scheme: dark)'
+        ).matches
+    )
+) {
+
+    document.documentElement.classList.add('dark');
+
+    document.getElementById(
+        'theme-icon'
+    ).innerText = '🌙 Dark';
+
+} else {
+
+    document.documentElement.classList.remove('dark');
+
+    document.getElementById(
+        'theme-icon'
+    ).innerText = '☀️ Light';
+
+}
+
+
+/* =========================================================
+   DOCX GENERATOR
+   ORIGINAL PLACEHOLDER LOGIC
+========================================================= */
+
+async function generateDoc() {
+
+    const fileInput =
+        document.getElementById('docx-input');
+
+
+    let masterFile;
+
+
+    if (fileInput.files[0]) {
+
+        masterFile =
+            fileInput.files[0];
+
+    } else {
+
+        try {
+
+            const response =
+                await fetch(
+                    './master-tenancy.docx'
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    'Saved master document could not be loaded.'
+                );
+
+            }
+
+
+            masterFile =
+                await response.blob();
+
+
+        } catch (error) {
+
+            alert(
+                'Unable to load the saved master document. ' +
+                'Please check that master-tenancy.docx exists in the repository.'
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    const replacements = {
+
+        "DURATION":
+            document.getElementById('DURATION').value,
+
+        "DURATION_YEAR":
+            document.getElementById('DURATION_YEAR').value,
+
+        "START_DATE":
+            document.getElementById('START_DATE').value,
+
+        "END_DATE":
+            document.getElementById('END_DATE').value,
+
+        "RENEW":
+            document.getElementById('RENEW').value,
+
+        "RENEW_YEAR":
+            document.getElementById('RENEW_YEAR').value,
+
+        "BANK_DETAIL":
+            document.getElementById('BANK_DETAIL').value,
+
+        "LANDLORD_NAME":
+            document.getElementById('LANDLORD_NAME').value,
+
+        "LANDLORD_IC":
+            document.getElementById('LANDLORD_IC').value,
+
+        "LANDLORD_PHONE":
+            document.getElementById('LANDLORD_PHONE').value,
+
+        "LANDLORD_ADDRESS":
+            document.getElementById('LANDLORD_ADDRESS').value,
+
+        "TENANT_NAME":
+            document.getElementById('TENANT_NAME').value,
+
+        "TENANT_IC":
+            document.getElementById('TENANT_IC').value,
+
+        "TENANT_PHONE":
+            document.getElementById('TENANT_PHONE').value,
+
+        "TENANT_ADDRESS":
+            document.getElementById('TENANT_ADDRESS').value,
+
+        "PROPERTY_ADDRESS":
+            document.getElementById('PROPERTY_ADDRESS').value,
+
+        "RENTAL_AMOUNT":
+            document.getElementById('RENTAL_AMOUNT').value,
+
+        "RENTAL_NUMBER":
+            document.getElementById('RENTAL_NUMBER').value,
+
+        "DEPOSIT_AMOUNT":
+            document.getElementById('DEPOSIT_AMOUNT').value,
+
+        "DEPOSIT_NUMBER":
+            document.getElementById('DEPOSIT_NUMBER').value,
+
+        "UTILITY_DEPOSIT":
+            document.getElementById('UTILITY_DEPOSIT').value,
+
+        "UTILITY_NUMBER":
+            document.getElementById('UTILITY_NUMBER').value
+
+    };
+
+
+    try {
+
+        const zip =
+            await JSZip.loadAsync(
+                masterFile
+            );
+
+
+        const xmlFiles =
+            Object.keys(zip.files).filter(
+                fileName =>
+                    fileName.startsWith('word/') &&
+                    fileName.endsWith('.xml')
+            );
+
+
+        for (const fileName of xmlFiles) {
+
+            const xmlFile =
+                zip.file(fileName);
+
+
+            if (xmlFile) {
+
+                let content =
+                    await xmlFile.async("string");
+
+
+                content =
+                    content.replace(
+                        /(<w:t[^>]*>)([\s\S]*?)(<\/w:t>)/g,
+                        (match, openTag, text, closeTag) => {
+                            return openTag + text + closeTag;
+                        }
+                    );
+
+
+                content =
+                    content.replace(
+                        /\s*(?:<[^>]+>)*\s*([A-Z0-9_]+)\s*(?:<[^>]+>)*\s*/g,
+                        '[$1]'
+                    );
+
+
+                for (
+                    const key of Object.keys(replacements)
+                ) {
+
+                    const brokenRegex =
+                        new RegExp(
+                            '\\\\s*' +
+                            key
+                                .split('')
+                                .join('(?:<[^>]+>)*') +
+                            '\\s*\\',
+                            'g'
+                        );
+
+
+                    content =
+                        content.replace(
+                            brokenRegex,
+                            `[${key}]`
+                        );
+
+                }
+
+
+                for (
+                    const [key, value]
+                    of Object.entries(replacements)
+                ) {
+
+                    const safeValue =
+                        String(value)
+                            .replace(/&/g, '&amp;')
+                            .replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')
+                            .replace(/"/g, '&quot;')
+                            .replace(/'/g, '&apos;');
+
+
+                    const targetKey =
+                        `[${key}]`;
+
+
+                    content =
+                        content
+                            .split(targetKey)
+                            .join(safeValue);
+
+                }
+
+
+                zip.file(
+                    fileName,
+                    content
+                );
+
+            }
+
+        }
+
+
+        const blob =
+            await zip.generateAsync({
+
+                type: "blob",
+
+                mimeType:
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+            });
+
+
+        const tenantName =
+            replacements["TENANT_NAME"]
+                .replace(
+                    /[^a-z0-9]/gi,
+                    '_'
+                );
+
+
+        const fileName =
+            `Tenancy_Agreement_${tenantName}.docx`;
+
+
+        const link =
+            document.createElement('a');
+
+
+        link.href =
+            URL.createObjectURL(blob);
+
+        link.download =
+            fileName;
+
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(
+            link.href
+        );
+
+
+    } catch (err) {
+
+        alert(
+            "Error processing document: " +
+            err.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIAL DASHBOARD SETUP
+========================================================= */
+
+document.addEventListener(
+    'DOMContentLoaded',
+    () => {
+
+        loadProperties();
+        renderAccountSelection([]);
+        updatePropertyTypeFields();
+
+    }
+);
+
+
+/* =========================================================
+   PWA SERVICE WORKER
+========================================================= */
+
+if ('serviceWorker' in navigator) {
+
+    window.addEventListener(
+        'load',
+        () => {
+
+            navigator.serviceWorker
+                .register('./sw.js')
+                .then(
+                    registration => {
+
+                        console.log(
+                            'AE Tenancy Portal service worker registered:',
+                            registration.scope
+                        );
+
+                    }
+                )
+                .catch(
+                    error => {
+
+                        console.error(
+                            'AE Tenancy Portal service worker registration failed:',
+                            error
+                        );
+
+                    }
+                );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CUSTOM INSTALL BANNER
+========================================================= */
+
+let deferredInstallPrompt = null;
+
+const installBanner =
+    document.getElementById(
+        'install-banner'
+    );
+
+const installAction =
+    document.getElementById(
+        'install-action'
+    );
+
+const installMessage =
+    document.getElementById(
+        'install-banner-message'
+    );
+
+
+function showInstallBanner() {
+
+    if (
+        window.matchMedia(
+            '(display-mode: standalone)'
+        ).matches ||
+        window.navigator.standalone === true
+    ) {
+
+        return;
+
+    }
+
+
+    installBanner.style.display =
+        'block';
+
+}
+
+
+function closeInstallBanner() {
+
+    installBanner.style.display =
+        'none';
+
+}
+
+
+async function installPortal() {
+
+    if (!deferredInstallPrompt) {
+
+        installMessage.innerText =
+            'Open Chrome ⋮ menu and choose "Install app" or "Add to Home screen".';
+
+        installAction.style.display =
+            'none';
+
+        return;
+
+    }
+
+
+    try {
+
+        deferredInstallPrompt.prompt();
+
+
+        const choice =
+            await deferredInstallPrompt.userChoice;
+
+
+        deferredInstallPrompt =
+            null;
+
+
+        if (
+            choice.outcome === 'accepted'
+        ) {
+
+            closeInstallBanner();
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            'AE Tenancy Portal install prompt error:',
+            error
+        );
+
+    }
+
+}
+
+
+window.addEventListener(
+    'beforeinstallprompt',
+    event => {
+
+        event.preventDefault();
+
+        deferredInstallPrompt =
+            event;
+
+
+        installAction.style.display =
+            'inline';
+
+
+        installMessage.innerText =
+            'Add it to your home screen for quick access.';
+
+
+        showInstallBanner();
+
+    }
+);
+
+
+window.addEventListener(
+    'load',
+    () => {
+
+        setTimeout(
+            () => {
+
+                if (!deferredInstallPrompt) {
+
+                    if (
+                        !window.matchMedia(
+                            '(display-mode: standalone)'
+                        ).matches &&
+                        window.navigator.standalone !== true
+                    ) {
+
+                        installMessage.innerText =
+                            'Open Chrome ⋮ menu and choose "Install app" or "Add to Home screen".';
+
+                        installAction.style.display =
+                            'none';
+
+                        showInstallBanner();
+
+                    }
+
+                }
+
+            },
+            2500
+        );
+
+    }
+);
+
+
+window.addEventListener(
+    'appinstalled',
+    () => {
+
+        deferredInstallPrompt =
+            null;
+
+        closeInstallBanner();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
